@@ -24,6 +24,9 @@
         <!-- Annotated entity classes -->
         <mapping class="com.povobolapo.organizer.dao.TTask"/>
         <mapping class="com.povobolapo.organizer.dao.DictTaskStatus"/>
-
+        <mapping class="com.povobolapo.organizer.dao.TUser"/>
+        <mapping class="com.povobolapo.organizer.dao.DictNotifyType"/>
+        <mapping class="com.povobolapo.organizer.dao.TComment"/>
+        <mapping class="com.povobolapo.organizer.dao.TNotification"/>
     </session-factory>
 </hibernate-configuration>
