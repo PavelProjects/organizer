@@ -9,10 +9,4 @@ public class TUserDao {
         this.session = session;
     }
 
-    public void createUser(TUser user) {
-        /*session.beginTransaction();
-
-        session.save(user);*/
-
-    }
 }
