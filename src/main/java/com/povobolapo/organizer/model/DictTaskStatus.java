@@ -1,10 +1,10 @@
-package com.povobolapo.organizer.dao;
+package com.povobolapo.organizer.model;
 
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-import static com.povobolapo.organizer.dao.DictTaskStatus.NAME;
+import static com.povobolapo.organizer.model.DictTaskStatus.NAME;
 
 @Entity
 @Table(name = NAME)

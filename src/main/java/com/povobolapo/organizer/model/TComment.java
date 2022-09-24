@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.dao;
+package com.povobolapo.organizer.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

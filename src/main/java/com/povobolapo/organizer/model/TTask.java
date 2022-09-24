@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.dao;
+package com.povobolapo.organizer.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -77,5 +77,12 @@ public class TTask implements Serializable {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "id: %s\nname: %s\n", id, name
+        );
     }
 }
