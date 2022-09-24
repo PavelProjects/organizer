@@ -1,10 +1,11 @@
 package com.povobolapo.organizer.dao;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "t_user")
-public class TUser {
+public class TUser implements Serializable {
 
     @Id
     @Column(name = "id")

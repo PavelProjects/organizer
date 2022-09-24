@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
-@Table(name = "t_tasks")
+@Table(name = "t_task")
 public class TTask implements Serializable {
     @Id
     @GeneratedValue
