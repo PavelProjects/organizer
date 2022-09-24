@@ -31,6 +31,14 @@ public class TTask implements Serializable {
 //    TODO AUTHOR
 
 
+    public TTask() {
+    }
+
+    public TTask(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public Integer getId() {
         return id;
     }
