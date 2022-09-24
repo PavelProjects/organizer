@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.dao.api;
+package com.povobolapo.organizer.dao.repository;
 
 import com.povobolapo.organizer.model.DictTaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

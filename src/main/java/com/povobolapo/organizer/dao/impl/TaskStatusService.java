@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.dao.impl;
 
-import com.povobolapo.organizer.dao.api.TaskStatusRepository;
+import com.povobolapo.organizer.dao.repository.TaskStatusRepository;
 import com.povobolapo.organizer.model.DictTaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,10 +1,9 @@
 package com.povobolapo.organizer.dao.impl;
 
-import com.povobolapo.organizer.dao.api.TTaskRepository;
+import com.povobolapo.organizer.dao.repository.TTaskRepository;
 import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TTask;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 
@@ -14,7 +13,7 @@ public class TTaskService {
     private TaskStatusService statusDao;
 
     @Autowired
-    public TTaskService(TTaskRepository tTaskRepository,TaskStatusService statusDao) {
+    public TTaskService(TTaskRepository tTaskRepository, TaskStatusService statusDao) {
         this.statusDao = statusDao;
         this.tTaskRepository = tTaskRepository;
     }
