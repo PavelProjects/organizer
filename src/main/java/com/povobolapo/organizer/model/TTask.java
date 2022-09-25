@@ -2,7 +2,7 @@ package com.povobolapo.organizer.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "t_task")
@@ -28,7 +28,9 @@ public class TTask implements Serializable {
     @Column(name = "deadline")
     private Date deadline;
 
-//    TODO AUTHOR
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author")
+    private TUser author;
 
 
     public TTask() {
@@ -37,6 +39,14 @@ public class TTask implements Serializable {
     public TTask(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public TUser getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(TUser author) {
+        this.author = author;
     }
 
     public Integer getId() {

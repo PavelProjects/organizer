@@ -1,25 +1,21 @@
 package com.povobolapo.organizer;
 
-import org.junit.runner.RunWith;
+import com.povobolapo.organizer.dao.service.TTaskService;
+import com.povobolapo.organizer.model.TTask;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+
+@SpringBootTest(classes = OrganizerApplication.class)
 class OrganizerApplicationTests {
-//	private TTaskService dao;
-//	@PersistenceContext
-//	private EntityManager em;
-//
-//	@Autowired
-//	public OrganizerApplicationTests(TTaskService dao) {
-//		this.dao = dao;
-//	}
-//
-//	@Test
-//	void testTaskDao() {
-////		TTask created = dao.createTask(new TTask("test", "new"));
-////		System.out.println(created);
-//	}
+    @Autowired
+    private TTaskService service;
+
+	@Test
+	void testTaskDao() {
+		TTask created = service.createTask(new TTask("test", "new"));
+		System.out.println(created);
+	}
 
 }
