@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.dao.impl.TTaskService;
+import com.povobolapo.organizer.dao.service.TTaskService;
 import com.povobolapo.organizer.model.TTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

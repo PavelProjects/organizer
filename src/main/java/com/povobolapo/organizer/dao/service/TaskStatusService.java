@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.dao.impl;
+package com.povobolapo.organizer.dao.service;
 
 import com.povobolapo.organizer.dao.repository.TaskStatusRepository;
 import com.povobolapo.organizer.model.DictTaskStatus;

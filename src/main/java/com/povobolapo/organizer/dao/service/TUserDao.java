@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.dao.impl;
+package com.povobolapo.organizer.dao.service;
 
 import org.hibernate.Session;
 
