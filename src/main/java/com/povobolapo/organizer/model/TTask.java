@@ -19,7 +19,7 @@ public class TTask implements Serializable {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status")
+    @JoinColumn(name = "status", referencedColumnName = "name")
     private DictTaskStatus dictTaskStatus;
 
     @Column(name = "creation_date")
@@ -29,7 +29,7 @@ public class TTask implements Serializable {
     private Date deadline;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author", referencedColumnName = "login")
     private TUser author;
 
 

@@ -16,6 +16,6 @@ public class TaskStatusService {
     }
 
     public DictTaskStatus getTaskStatus(String name) {
-        return taskStatusRepository.getById(1);
+        return taskStatusRepository.findByName(name);
     }
 }

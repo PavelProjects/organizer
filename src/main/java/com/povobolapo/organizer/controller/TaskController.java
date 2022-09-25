@@ -21,6 +21,6 @@ public class TaskController {
 
     @PostMapping("/create")
     public TTask createTask(@RequestBody TTask task){
-        return tTaskService.createTask(task);
+        return tTaskService.createNewTask(task);
     }
 }

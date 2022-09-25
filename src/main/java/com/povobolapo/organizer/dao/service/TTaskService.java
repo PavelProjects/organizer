@@ -20,7 +20,7 @@ public class TTaskService {
         this.tTaskRepository = tTaskRepository;
     }
 
-    public TTask createTask(TTask tTask) {
+    public TTask createNewTask(TTask tTask) {
         DictTaskStatus status = statusDao.getTaskStatus("new");
         tTask.setTaskStatus(status);
         tTask.setCreationDate(new Date());

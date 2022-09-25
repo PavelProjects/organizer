@@ -14,7 +14,7 @@ class OrganizerApplicationTests {
 
 	@Test
 	void testTaskDao() {
-		TTask created = service.createTask(new TTask("test", "new"));
+		TTask created = service.createNewTask(new TTask("test", "new"));
 		System.out.println(created);
 	}
 
