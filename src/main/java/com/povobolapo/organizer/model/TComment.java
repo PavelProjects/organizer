@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Table(name = "t_comment")
 public class TComment implements Serializable {
     @Id
+    @GeneratedValue(generator = "t_comment_id_seq")
     @Column(name = "id")
     private Integer id;
 

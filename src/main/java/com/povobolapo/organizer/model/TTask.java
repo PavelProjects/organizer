@@ -8,7 +8,7 @@ import java.util.Date;
 @Table(name = "t_task")
 public class TTask implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "t_task_id_seq")
     @Column(name = "id")
     private Integer id;
 

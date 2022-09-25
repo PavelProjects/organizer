@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class TUser implements Serializable {
 
     @Id
+    @GeneratedValue(generator = "t_user_id_seq")
     @Column(name = "id")
     private Integer id;
 

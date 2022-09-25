@@ -8,12 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TaskStatusService {
-    private TaskStatusRepository taskStatusRepository;
-
     @Autowired
-    public TaskStatusService(TaskStatusRepository taskStatusRepository) {
-        this.taskStatusRepository = taskStatusRepository;
-    }
+    private TaskStatusRepository taskStatusRepository;
 
     public DictTaskStatus getTaskStatus(String name) {
         return taskStatusRepository.findByName(name);

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Table(name = "t_notification")
 public class TNotification implements Serializable {
     @Id
+    @GeneratedValue(generator = "t_notification_id_seq")
     @Column(name = "id")
     private Integer id;
 

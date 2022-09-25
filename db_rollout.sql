@@ -26,8 +26,8 @@ create table t_task (
     id serial primary key,
     name varchar(128) not null,
     description text,
-    author varchar(32) references t_user(login),
-    status varchar(64) references dict_task_status(name),
+    author varchar(32) references t_user(login) not null,
+    status varchar(64) references dict_task_status(name) not null,
     creation_date timestamp with time zone not null default now(),
     deadline timestamp with time zone
 );
@@ -54,5 +54,8 @@ create table t_user_task (
     user_login varchar(32) not null references t_user(login),
     task_id integer not null references t_task(id)
 );
+
+--insert into t_user (login, password, name) values ('test_user', '1', 'Test User');
+--insert into dict_task_status (name, caption) values ('new', 'New task');
 
 commit;
