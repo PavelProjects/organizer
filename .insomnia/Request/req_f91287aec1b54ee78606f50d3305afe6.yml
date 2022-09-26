@@ -1,0 +1,30 @@
+_id: req_f91287aec1b54ee78606f50d3305afe6
+type: Request
+parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
+modified: 1664222193853
+created: 1664222010272
+url: http://localhost:8080/task/create/
+name: create task
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"name": "{% uuid 'v1' %}",
+    	"description": "{% now 'iso-8601', '' %}"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_4e65e3936fa94fcf809068ad705253b9
+authentication: {}
+metaSortKey: -1664222010272
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
