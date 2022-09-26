@@ -1,9 +1,9 @@
-package com.povobolapo.organizer.dao.service;
+package com.povobolapo.organizer.service;
 
-import com.povobolapo.organizer.dao.repository.TTaskRepository;
+import com.povobolapo.organizer.repository.TTaskRepository;
 import com.povobolapo.organizer.model.DictTaskStatus;
-import com.povobolapo.organizer.model.TTask;
-import com.povobolapo.organizer.model.TUser;
+import com.povobolapo.organizer.model.TaskEntity;
+import com.povobolapo.organizer.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +23,13 @@ public class TTaskService {
         this.userService = userService;
     }
 
-    public TTask createNewTask(String author, TTask tTask) {
+    public TaskEntity createNewTask(String author, TaskEntity taskEntity) {
         DictTaskStatus status = taskStatusService.getTaskStatus("new");
-        TUser authorUser = userService.getUserByLogin(author);
-        tTask.setAuthor(authorUser);
-        tTask.setTaskStatus(status);
-        tTask.setCreationDate(new Date());
-        return tTaskRepository.save(tTask);
+        UserEntity authorUser = userService.getUserByLogin(author);
+        taskEntity.setAuthor(authorUser);
+        taskEntity.setTaskStatus(status);
+        taskEntity.setCreationDate(new Date());
+        return tTaskRepository.save(taskEntity);
     }
 
 }

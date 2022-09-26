@@ -4,11 +4,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "t_user")
-public class TUser implements Serializable {
+@Table(name = "_user")
+public class UserEntity implements Serializable {
+    //TODO добавить названия полей таблицы, что бы на них можно было ссылаться в коде
 
     @Id
-    @GeneratedValue(generator = "t_user_id_seq")
+    @GeneratedValue(generator = "_user_id_seq")
     @Column(name = "id")
     private Integer id;
 
@@ -25,10 +26,10 @@ public class TUser implements Serializable {
     private String avatar;
 
 
-    public TUser() {
+    public UserEntity() {
     }
 
-    public TUser(Integer id, String login, String password, String name, String avatar) {
+    public UserEntity(Integer id, String login, String password, String name, String avatar) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -36,11 +37,17 @@ public class TUser implements Serializable {
         this.avatar = avatar;
     }
 
-    public TUser(String login, String password, String name, String avatar) {
+    public UserEntity(String login, String password, String name, String avatar) {
         this.login = login;
         this.password = password;
         this.name = name;
         this.avatar = avatar;
+    }
+
+    public UserEntity(String login, String password, String name) {
+        this.login = login;
+        this.password = password;
+        this.name = name;
     }
 
     public Integer getId() {

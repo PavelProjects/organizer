@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "t_comment")
-public class TComment implements Serializable {
+@Table(name = "_comment")
+public class CommentEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "t_comment_id_seq")
+    @GeneratedValue(generator = "_comment_id_seq")
     @Column(name = "id")
     private Integer id;
 
@@ -24,17 +24,17 @@ public class TComment implements Serializable {
     @Column(name = "body")
     private String body;
 
-    public TComment() {
+    public CommentEntity() {
     }
 
-    public TComment(LocalDate creationDate, String authorLogin, Integer taskId, String body) {
+    public CommentEntity(LocalDate creationDate, String authorLogin, Integer taskId, String body) {
         this.creationDate = creationDate;
         this.authorLogin = authorLogin;
         this.taskId = taskId;
         this.body = body;
     }
 
-    public TComment(Integer id, LocalDate creationDate, String authorLogin, Integer taskId, String body) {
+    public CommentEntity(Integer id, LocalDate creationDate, String authorLogin, Integer taskId, String body) {
         this.id = id;
         this.creationDate = creationDate;
         this.authorLogin = authorLogin;

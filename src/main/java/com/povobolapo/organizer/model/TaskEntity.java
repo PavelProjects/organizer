@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "t_task")
-public class TTask implements Serializable {
+@Table(name = "_task")
+public class TaskEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "t_task_id_seq")
+    @GeneratedValue(generator = "_task_id_seq")
     @Column(name = "id")
     private Integer id;
 
@@ -30,22 +30,22 @@ public class TTask implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author", referencedColumnName = "login")
-    private TUser author;
+    private UserEntity author;
 
 
-    public TTask() {
+    public TaskEntity() {
     }
 
-    public TTask(String name, String description) {
+    public TaskEntity(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public TUser getAuthor() {
+    public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(TUser author) {
+    public void setAuthor(UserEntity author) {
         this.author = author;
     }
 

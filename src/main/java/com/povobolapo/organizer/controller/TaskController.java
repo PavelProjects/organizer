@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.dao.service.TTaskService;
-import com.povobolapo.organizer.model.TTask;
+import com.povobolapo.organizer.service.TTaskService;
+import com.povobolapo.organizer.model.TaskEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public TTask createTask(@RequestBody TTask task){
+    public TaskEntity createTask(@RequestBody TaskEntity task){
         //todo PASS LOGIN FROM AUTH
         return tTaskService.createNewTask("", task);
     }

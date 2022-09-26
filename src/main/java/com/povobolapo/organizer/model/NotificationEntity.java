@@ -5,10 +5,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "t_notification")
-public class TNotification implements Serializable {
+@Table(name = "_notification")
+public class NotificationEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "t_notification_id_seq")
+    @GeneratedValue(generator = "_notification_id_seq")
     @Column(name = "id")
     private Integer id;
 
@@ -30,11 +30,11 @@ public class TNotification implements Serializable {
     @Column(name = "type")
     private String type;
 
-    public TNotification() {
+    public NotificationEntity() {
     }
 
-    public TNotification(Integer id, LocalDate creationDate, String userLogin,
-                         Integer taskId, String creatorLogin, String body, String type) {
+    public NotificationEntity(Integer id, LocalDate creationDate, String userLogin,
+                              Integer taskId, String creatorLogin, String body, String type) {
         this.id = id;
         this.creationDate = creationDate;
         this.userLogin = userLogin;
@@ -44,8 +44,8 @@ public class TNotification implements Serializable {
         this.type = type;
     }
 
-    public TNotification(LocalDate creationDate, String userLogin,
-                         Integer taskId, String creatorLogin, String body, String type) {
+    public NotificationEntity(LocalDate creationDate, String userLogin,
+                              Integer taskId, String creatorLogin, String body, String type) {
         this.creationDate = creationDate;
         this.userLogin = userLogin;
         this.taskId = taskId;

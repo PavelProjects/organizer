@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories("com.povobolapo.organizer.dao.repository")
+@EnableJpaRepositories("com.povobolapo.organizer.repository")
 @EnableTransactionManagement
 public class ApplicationConfig {
     private static final String PROP_DATABASE_DRIVER = "db.driver";
