@@ -33,6 +33,7 @@ public class UserController {
         return userService.getUserByLogin(login);
     }
 
+    //todo надо сделать авторизацию, а то у меня 403
     @PostMapping("/create")
     public UserEntity createUser(@RequestBody UserEntity user) throws ValidationException {
         log.debug("POST-request: createUser (user={})", user);
