@@ -7,8 +7,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 
 @Component
 public class UserService {
@@ -19,12 +17,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserEntity createUser(String login, String password, String name) {
-        Objects.requireNonNull(login);
-        Objects.requireNonNull(password);
-        Objects.requireNonNull(name);
-
-        UserEntity user = new UserEntity(login, encodePassword(password), name);
+    public UserEntity createUser(UserEntity user) {
+        String encodedPassword = encodePassword(user.getPassword());
+        user.setPassword(encodedPassword);
         userRepository.save(user);
         user.setPassword(null);
         return user;
