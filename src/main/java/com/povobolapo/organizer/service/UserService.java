@@ -3,8 +3,8 @@ package com.povobolapo.organizer.service;
 
 import com.povobolapo.organizer.repository.UserRepository;
 import com.povobolapo.organizer.model.UserEntity;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -12,11 +12,13 @@ import java.util.Objects;
 
 @Component
 public class UserService {
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserEntity createUser(String login, String password, String name) {
@@ -43,6 +45,6 @@ public class UserService {
         return userRepository.findByLogin(login);
     }
     public String encodePassword(String password) {
-        return DigestUtils.sha1Hex(password);
+        return passwordEncoder.encode(password);
     }
 }
