@@ -1,0 +1,25 @@
+_id: req_dcefabf67f934753a671ff71376b281f
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1664643890621
+created: 1664643737066
+url: http://localhost:8080/user/delete
+name: Delete dummy_user
+description: ""
+method: DELETE
+body: {}
+parameters:
+  - id: pair_2f4267f990fd4ed39eb7566f263ca05b
+    name: login
+    value: dummy_user
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1664395603151
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

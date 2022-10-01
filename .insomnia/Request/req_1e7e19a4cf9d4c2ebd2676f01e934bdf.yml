@@ -1,26 +1,26 @@
-_id: req_f91287aec1b54ee78606f50d3305afe6
+_id: req_1e7e19a4cf9d4c2ebd2676f01e934bdf
 type: Request
-parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
-modified: 1664646450619
-created: 1664222010272
-url: http://localhost:8080/task/create/
-name: create task
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1664645969193
+created: 1664645929235
+url: http://localhost:8080/user/create
+name: Create user NO PASSWORD
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-    	"name": "{% uuid 'v1' %}",
-    	"description": "{% now 'iso-8601', '' %}"
+    	"login" : "lox_user",
+    	"name" : "",
+    	"avatar" : "https://tinyurl.com/46pv25pw"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_4e65e3936fa94fcf809068ad705253b9
 authentication: {}
-metaSortKey: -1664222010272
+metaSortKey: -1664395603101
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
