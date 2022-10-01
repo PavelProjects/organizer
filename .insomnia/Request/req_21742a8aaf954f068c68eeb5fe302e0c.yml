@@ -1,0 +1,37 @@
+_id: req_21742a8aaf954f068c68eeb5fe302e0c
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1664646469459
+created: 1664397279716
+url: http://localhost:8080/user/create
+name: Create new user
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login" : "dummy_user",
+    	"password" : "debi4",
+    	"name" : "",
+    	"avatar" : "https://tinyurl.com/46pv25pw"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_3d5587145cea4f9fb490ba8a6678123f
+authentication:
+  type: basic
+  useISO88591: false
+  disabled: false
+  username: ""
+  password: ""
+metaSortKey: -1664395603251
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
