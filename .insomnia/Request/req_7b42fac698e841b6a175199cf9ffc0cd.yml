@@ -1,0 +1,25 @@
+_id: req_7b42fac698e841b6a175199cf9ffc0cd
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1664643838010
+created: 1664395603201
+url: http://localhost:8080/user
+name: Get user (dummy_user)
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_b82d2dd8ff8244348e46d76dd6cf3f02
+    name: login
+    value: dummy_user
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1664395603201
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

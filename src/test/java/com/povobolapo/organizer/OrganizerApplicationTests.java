@@ -1,5 +1,6 @@
 package com.povobolapo.organizer;
 
+import com.povobolapo.organizer.controller.models.UserRequestBody;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.TTaskService;
 import com.povobolapo.organizer.model.TaskEntity;
@@ -18,7 +19,7 @@ class OrganizerApplicationTests {
 
 	@Test
 	void testCreateDeleteUser() {
-		UserEntity user = userService.createUser("test_user", "1", "test user");
+		UserEntity user = userService.createUser(new UserRequestBody("test_user", "123qwery", "heh"));
 		assert user.getId() > 0;
 		assert userService.deleteUser(user.getLogin());
 	}
