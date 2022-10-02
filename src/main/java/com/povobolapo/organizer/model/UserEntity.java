@@ -50,6 +50,10 @@ public class UserEntity implements Serializable {
         this.name = name;
     }
 
+    public UserEntity(String login) {
+        this.login = login;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -19,6 +19,13 @@ public class DictTaskStatus implements Serializable {
     @Column(name = "caption")
     private String caption;
 
+    public DictTaskStatus() {
+    }
+
+    public DictTaskStatus(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }
