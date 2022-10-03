@@ -1,0 +1,25 @@
+_id: req_600950c7788c4c2386f456e6783fa8d6
+type: Request
+parentId: fld_18168b6a6c25458c9fad7183ecf99f12
+modified: 1664826511618
+created: 1664825539614
+url: "{{ _.base_url }}/task"
+name: Get test task by id
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_6182e2c6e9f343679eb4ad24be025f64
+    name: id
+    value: "5"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1664749372292
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

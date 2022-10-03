@@ -1,26 +1,27 @@
-_id: req_1e7e19a4cf9d4c2ebd2676f01e934bdf
+_id: req_a4a8afd0230a4f6ca1214cad62769960
 type: Request
-parentId: fld_d524a6be92a441658adacb0ea05361e8
-modified: 1664826574124
-created: 1664645929235
-url: "{{ _.base_url }}/user/create"
-name: Create user NO PASSWORD
+parentId: fld_18168b6a6c25458c9fad7183ecf99f12
+modified: 1664826564830
+created: 1664749372392
+url: "{{ _.base_url }}/task/create"
+name: Create task
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-    	"login" : "lox_user",
-    	"name" : "",
-    	"avatar" : "https://tinyurl.com/46pv25pw"
+    	"name" : "task_first",
+    	"description" : "testing task controller",
+    	"author" : "task_test",
+    	"deadline" : "2023-10-07"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
 authentication: {}
-metaSortKey: -1664395603101
+metaSortKey: -1664749372392
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

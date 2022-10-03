@@ -1,9 +1,9 @@
 _id: req_dcefabf67f934753a671ff71376b281f
 type: Request
 parentId: fld_d524a6be92a441658adacb0ea05361e8
-modified: 1664643890621
+modified: 1664826577764
 created: 1664643737066
-url: http://localhost:8080/user/delete
+url: "{{ _.base_url }}/user/delete"
 name: Delete dummy_user
 description: ""
 method: DELETE
