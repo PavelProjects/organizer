@@ -1,26 +1,28 @@
-_id: req_f91287aec1b54ee78606f50d3305afe6
+_id: req_4d22147ae24a45c6af15b9fb300092e5
 type: Request
 parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
-modified: 1664646450619
-created: 1664222010272
-url: http://localhost:8080/task/create/
-name: create task
+modified: 1664832870151
+created: 1664659405185
+url: http://{{ _.baseUrl }}/login
+name: auth
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-    	"name": "{% uuid 'v1' %}",
-    	"description": "{% now 'iso-8601', '' %}"
+    	"login": "{{ _.userName }}",
+    	"password": "{{ _.password }}"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
     id: pair_4e65e3936fa94fcf809068ad705253b9
-authentication: {}
-metaSortKey: -1664222010272
+authentication:
+  type: bearer
+  token: ""
+metaSortKey: -1664643710639
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

@@ -1,0 +1,14 @@
+_id: env_1c286f66877c46c6839a7fbdc237b9dc
+type: Environment
+parentId: env_e85c3a1bd1f08de2207a91225b6ca992eb297012
+modified: 1664832934995
+created: 1664832669473
+name: vlad
+data:
+  baseUrl: localhost:8080
+dataPropertyOrder:
+  "&":
+    - baseUrl
+color: null
+isPrivate: false
+metaSortKey: 1664832669473
