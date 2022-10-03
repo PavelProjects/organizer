@@ -26,7 +26,7 @@ public class TaskController {
     //todo Pageable improve probably????
     @GetMapping("/all")
     public List<TaskEntity> getAllTasks(
-            @RequestParam(defaultValue = "1", required = false) @Positive Integer page,
+            @RequestParam(defaultValue = "0", required = false) @Positive Integer page,
             @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
         log.debug("GET-request: getAllTasks (page={}; size={})", page, size);
         return taskService.getAllTasks(page, size);
