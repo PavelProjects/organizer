@@ -29,7 +29,7 @@ class OrganizerApplicationTests {
 	@Test
 	public void jwtTest() {
 		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername("test_user");
+				.loadUserByUsername("autotest_user");
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		System.out.println(token);
@@ -38,13 +38,13 @@ class OrganizerApplicationTests {
 
 	@Test
 	void testCreateDeleteUser() {
-		UserEntity user = userService.createUser(new UserRequestBody("autotest_user", "1", "bombastik"));
+		UserEntity user = userService.createUser(new UserRequestBody("autotest_user_2", "1", "bombastik"));
 		assert user.getId() > 0;
-//		assert userService.deleteUser(user.getLogin());
+		assert userService.deleteUser(user.getLogin());
 	}
 
 	@Test
 	void testCreateTask() {
-		TaskEntity created = service.createNewTask("test_user", new TaskEntity("test", "new"));
+		TaskEntity created = service.createNewTask("autotest_user", new TaskEntity("test", "new"));
 	}
 }
