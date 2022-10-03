@@ -1,12 +1,16 @@
-package com.povobolapo.organizer.controller.models;
+package com.povobolapo.organizer.controller.model;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class AuthRequest {
+public class AuthRequest  implements Serializable {
     @NotNull
     private String login;
     @NotNull
     private String password;
+
+    public AuthRequest() {
+    }
 
     public AuthRequest(String login, String password) {
         this.login = login;

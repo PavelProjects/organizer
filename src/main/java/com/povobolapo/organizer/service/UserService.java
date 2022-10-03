@@ -1,19 +1,16 @@
 package com.povobolapo.organizer.service;
 
 
-import com.povobolapo.organizer.controller.models.UserRequestBody;
+import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.repository.UserRepository;
 import com.povobolapo.organizer.model.UserEntity;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 
 @Component
@@ -30,8 +27,12 @@ public class UserService {
     }
 
     public UserEntity createUser(UserRequestBody userBody) {
-        UserEntity user = userBody.toUser();
-        String encodedPassword = encodePassword(user.getPassword());
+        UserEntity user = userRepository.findByLogin(userBody.getLogin());
+        if (user != null) {
+            return user;
+        }
+        user = userBody.toUser();
+        String encodedPassword = encodePassword(userBody.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
         user.setPassword(null);
