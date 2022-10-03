@@ -1,0 +1,10 @@
+_id: ut_a8c0853e4faf4629ab25dcc214c741ec
+type: UnitTest
+parentId: uts_227d5426c1d74958a7f1dc232d4964f8
+modified: 1664732911058
+created: 1664732898850
+requestId: req_dcefabf67f934753a671ff71376b281f
+name: DELETE user Dummy
+code: |-
+  const response1 = await insomnia.send();
+  expect(response1.status).to.be.oneOf([200,204]);

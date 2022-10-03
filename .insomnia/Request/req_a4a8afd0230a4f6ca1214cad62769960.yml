@@ -1,26 +1,27 @@
-_id: req_f91287aec1b54ee78606f50d3305afe6
+_id: req_a4a8afd0230a4f6ca1214cad62769960
 type: Request
-parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
-modified: 1664749449145
-created: 1664222010272
-url: http://localhost:8080/task/create/
-name: create task
+parentId: fld_18168b6a6c25458c9fad7183ecf99f12
+modified: 1664825397131
+created: 1664749372392
+url: http://localhost:8080/task/create
+name: Create task
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-    	"name": "{% uuid 'v1' %}",
-    	"description": "{% now 'iso-8601', '' %}"
+    	"name" : "task_first",
+    	"description" : "testing task controller",
+    	"author" : "task_test",
+    	"deadline" : "2023-10-07"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_4e65e3936fa94fcf809068ad705253b9
 authentication: {}
-metaSortKey: -1664222010272
+metaSortKey: -1664749372392
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

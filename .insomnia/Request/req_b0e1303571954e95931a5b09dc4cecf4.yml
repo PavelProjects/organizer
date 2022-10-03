@@ -1,0 +1,25 @@
+_id: req_b0e1303571954e95931a5b09dc4cecf4
+type: Request
+parentId: fld_18168b6a6c25458c9fad7183ecf99f12
+modified: 1664825676639
+created: 1664825644146
+url: http://localhost:8080/task/delete
+name: Delete test task by id
+description: ""
+method: DELETE
+body: {}
+parameters:
+  - id: pair_c8cd4565a7434fd69f2761d14b8144e8
+    name: id
+    value: "5"
+    description: ""
+headers: []
+authentication: {}
+metaSortKey: -1664749372242
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
