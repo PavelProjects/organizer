@@ -1,9 +1,9 @@
 _id: req_1e7e19a4cf9d4c2ebd2676f01e934bdf
 type: Request
 parentId: fld_d524a6be92a441658adacb0ea05361e8
-modified: 1664645969193
+modified: 1664832888466
 created: 1664645929235
-url: http://localhost:8080/user/create
+url: http://{{ _.baseUrl }}/user/create
 name: Create user NO PASSWORD
 description: ""
 method: POST
@@ -19,6 +19,7 @@ parameters: []
 headers:
   - name: Content-Type
     value: application/json
+    id: pair_ca8620defb444f9cabc0516e62e66525
 authentication: {}
 metaSortKey: -1664395603101
 isPrivate: false

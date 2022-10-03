@@ -1,0 +1,16 @@
+_id: ut_4fe4d437596d416d92010bd2e5872785
+type: UnitTest
+parentId: uts_227d5426c1d74958a7f1dc232d4964f8
+modified: 1664732883842
+created: 1664732581723
+requestId: req_7b42fac698e841b6a175199cf9ffc0cd
+name: Get user Dummy
+code: |-
+  const response = await insomnia.send();
+  const body = JSON.parse(response.data);
+
+  expect(response.status).to.equal(200);
+  expect(body.login).to.eql('dummy_user');
+  expect(body.password).to.eql('da4f5e98cc5728ad8a4f55ab0176c8d9c4bcad9f');
+  expect(body.name).to.eql('dummy_user');
+  expect(body.avatar).to.eql('https://tinyurl.com/46pv25pw');
