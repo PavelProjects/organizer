@@ -47,31 +47,34 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // We don't need CSRF for this example
         http.cors().and().csrf().disable();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
+                // Добавляем ендпоинты, для которых не нужна авторизация
+                .antMatchers("/user/create").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers(swaggerPath + "/**").permitAll()
                 .antMatchers(restApiDocPath + "/**").permitAll()
+                // Для всех остальных включаем авторизацию
                 .anyRequest().authenticated();
 
-        http.exceptionHandling().authenticationEntryPoint(securityAuthenticationEntryPoint);
+        // Если добавить, то любой запрос должен быть с хедором авторизации
+        // При возникновении ошибок в авторизации первым делом проверить этот момент
+        // http.exceptionHandling().authenticationEntryPoint(securityAuthenticationEntryPoint);
 
-        // Add a filter to validate the tokens with every request
+        // Добавляем свой фильтр, в котором проверяется правильность токена
         http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    // Set password encoding schema
+    // Кодировщик пароля юзера
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Used by spring security if CORS is enabled.
     @Bean
     public CorsFilter corsFilter() {
         var source = new UrlBasedCorsConfigurationSource();
@@ -84,7 +87,6 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
-    // Expose authentication manager bean
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {

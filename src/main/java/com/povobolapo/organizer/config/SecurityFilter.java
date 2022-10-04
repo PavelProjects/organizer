@@ -1,7 +1,10 @@
 package com.povobolapo.organizer.config;
 
+import com.povobolapo.organizer.controller.UserController;
 import com.povobolapo.organizer.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,9 +18,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
+    private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
+
     @Autowired
     private UserDetailsServiceImpl UserDetailsServiceImpl;
 
@@ -36,9 +42,9 @@ public class SecurityFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                log.error("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                log.error("JWT Token has expired");
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
@@ -46,8 +52,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         // Once we get the token validate it.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
             UserDetails userDetails = this.UserDetailsServiceImpl.loadUserByUsername(username);
+            Objects.requireNonNull(userDetails);
 
             // if token is valid configure Spring Security to manually set
             // authentication

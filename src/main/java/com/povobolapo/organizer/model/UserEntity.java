@@ -10,8 +10,6 @@ import java.util.Collection;
 @Entity
 @Table(name = "_user")
 public class UserEntity implements Serializable {
-    //TODO добавить названия полей таблицы, что бы на них можно было ссылаться в коде
-
     @Id
     @GeneratedValue(generator = "_user_id_seq")
     @Column(name = "id")
