@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 
 @SpringBootTest(classes = OrganizerApplication.class)
 class OrganizerApplicationTests {
@@ -64,7 +66,6 @@ class OrganizerApplicationTests {
 		try {
 			userService.getUserByLogin(TEST_USER_LOGIN);
 		} catch (NotFoundException ex) {
-			assert ex.getMessage().equals("User with login [" + TEST_USER_LOGIN + "] not found");
 		}
 	}
 
