@@ -1,0 +1,33 @@
+_id: req_53678a350bb147f390525d5790fe235d
+type: Request
+parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
+modified: 1665091426700
+created: 1664909154850
+url: http://{{ _.baseUrl }}/login
+name: Auth autotest
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login": "{{ _.userName }}",
+    	"password": "{{ _.password }}"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_4e65e3936fa94fcf809068ad705253b9
+authentication:
+  type: bearer
+  token: ""
+  disabled: true
+metaSortKey: -1664643710639
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

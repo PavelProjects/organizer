@@ -1,0 +1,35 @@
+_id: req_f5c32b0f261f441698fa91abff45577a
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1665091537028
+created: 1664916166154
+url: http://{{ _.baseUrl }}/user/update
+name: Update user
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login" : "{{ _.createUserName }}",
+    	"name" : "Autotest user 123",
+    	"avatar" : "https://tinyurl.com/46pv25pw"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_3d5587145cea4f9fb490ba8a6678123f
+authentication:
+  type: bearer
+  disabled: false
+  token: "{% response 'body', 'req_53678a350bb147f390525d5790fe235d',
+    'b64::JC50b2tlbg==::46b', 'always', 3600 %}"
+metaSortKey: -1664395603213.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

@@ -1,0 +1,10 @@
+_id: ut_aaad177ade9549f9acbecae5a1c34553
+type: UnitTest
+parentId: uts_d6b7304589904f3da3412bc3fbfceb1e
+modified: 1664916139570
+created: 1664914155401
+requestId: req_db57a95d265d439a86033ce820f1b84d
+name: Test delete forbidden
+code: |-
+  const response1 = await insomnia.send();
+  expect(response1.status).to.equal(403);

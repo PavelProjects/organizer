@@ -1,0 +1,10 @@
+_id: ut_d8a4f040aebd406d83bb15cb50c83337
+type: UnitTest
+parentId: uts_d6b7304589904f3da3412bc3fbfceb1e
+modified: 1664916096485
+created: 1664914172023
+requestId: req_520293d763f646ca92e9fee2fe6699a4
+name: Check create no password
+code: |-
+  const response1 = await insomnia.send();
+  expect(response1.status).to.equal(400);

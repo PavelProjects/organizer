@@ -1,0 +1,10 @@
+_id: ut_0b5e859d43ea41c99bc9cbbd4eabfe4a
+type: UnitTest
+parentId: uts_d6b7304589904f3da3412bc3fbfceb1e
+modified: 1664916055224
+created: 1664914158057
+requestId: req_dcefabf67f934753a671ff71376b281f
+name: Test delete
+code: |-
+  const response1 = await insomnia.send();
+  expect(response1.status).to.equal(200);

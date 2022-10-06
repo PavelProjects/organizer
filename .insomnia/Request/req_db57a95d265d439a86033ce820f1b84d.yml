@@ -1,0 +1,28 @@
+_id: req_db57a95d265d439a86033ce820f1b84d
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1665091445526
+created: 1664909240494
+url: http://{{ _.baseUrl }}/user/delete
+name: Delete dummy_user by autotest
+description: ""
+method: DELETE
+body: {}
+parameters:
+  - id: pair_2f4267f990fd4ed39eb7566f263ca05b
+    name: login
+    value: "{{ _.createUserName }}"
+    description: ""
+headers: []
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_53678a350bb147f390525d5790fe235d',
+    'b64::JC50b2tlbg==::46b', 'always', 3600 %}"
+metaSortKey: -1664395603126
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

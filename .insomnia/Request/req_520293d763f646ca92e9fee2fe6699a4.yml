@@ -1,0 +1,32 @@
+_id: req_520293d763f646ca92e9fee2fe6699a4
+type: Request
+parentId: fld_d524a6be92a441658adacb0ea05361e8
+modified: 1664915009646
+created: 1664909326749
+url: http://{{ _.baseUrl }}/user/create
+name: Create user no login
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login" : "",
+    	"name" : "",
+    	"password": "",
+    	"avatar" : "https://tinyurl.com/46pv25pw"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_ca8620defb444f9cabc0516e62e66525
+authentication: {}
+metaSortKey: -1664152143330.125
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

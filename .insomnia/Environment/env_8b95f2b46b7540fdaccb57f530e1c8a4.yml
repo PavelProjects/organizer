@@ -1,0 +1,14 @@
+_id: env_8b95f2b46b7540fdaccb57f530e1c8a4
+type: Environment
+parentId: env_e85c3a1bd1f08de2207a91225b6ca992eb297012
+modified: 1665091401013
+created: 1664832924579
+name: puk
+data:
+  baseUrl: localhost:8080/organizer
+dataPropertyOrder:
+  "&":
+    - baseUrl
+color: null
+isPrivate: false
+metaSortKey: 1664832924579
