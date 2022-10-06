@@ -2,6 +2,7 @@ package com.povobolapo.organizer;
 
 import com.povobolapo.organizer.config.JwtTokenUtil;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.TTaskService;
 import com.povobolapo.organizer.service.UserDetailsServiceImpl;
@@ -58,6 +59,13 @@ class OrganizerApplicationTests {
 		// Удаляем за нужного юзера
 		setSecurityContext(TEST_USER_LOGIN);
 		userService.deleteUser(user.getLogin());
+
+		// Проверяем наличие ошибки, если юзер не найден
+		try {
+			userService.getUserByLogin(TEST_USER_LOGIN);
+		} catch (NotFoundException ex) {
+			assert ex.getMessage().equals("User with login [" + TEST_USER_LOGIN + "] not found");
+		}
 	}
 
 	private void setSecurityContext(String login) {

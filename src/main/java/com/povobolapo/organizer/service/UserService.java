@@ -98,8 +98,6 @@ public class UserService {
         if (user == null) {
             throw new NotFoundException("User with login [" + login + "] not found");
         }
-        // Убираем пароль в целях безопасности
-        // В идеале его вообще бы не загружать, пока хз как
         return user;
     }
 
