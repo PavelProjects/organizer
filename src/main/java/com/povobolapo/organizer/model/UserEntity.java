@@ -1,32 +1,26 @@
 package com.povobolapo.organizer.model;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 
 @Entity
 @Table(name = "_user")
 public class UserEntity implements Serializable {
-    //TODO добавить названия полей таблицы, что бы на них можно было ссылаться в коде
-
     @Id
     @GeneratedValue(generator = "_user_id_seq")
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "login")
+    @Column(name = "login", length = 32, nullable = false, unique = true)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 128, nullable = false)
     private String password;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 64, nullable = false)
     private String name;
 
-    @Column(name = "avatar")
+    @Column(name = "avatar", length = 128)
     private String avatar;
 
 

@@ -11,7 +11,6 @@ public class UserRequestBody {
     @NotNull
     private String login;
     @Size(max = 32)
-    @NotNull
     private String password;
     @Size(max = 64)
     private String name;

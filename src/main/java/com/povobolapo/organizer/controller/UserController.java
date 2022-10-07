@@ -1,5 +1,6 @@
 package com.povobolapo.organizer.controller;
 
+import com.povobolapo.organizer.controller.model.UserInfoResponse;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.UserEntity;
@@ -15,7 +16,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
@@ -24,27 +24,35 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public UserEntity getUserByLogin
-            (@RequestParam String login) throws ValidationException {
-        log.debug("GET-request: getUserByLogin (login={})", login);
-        if (login == null) {
-            log.error("Login is NULL.");
-            throw new ValidationException("Login cannot be NULL.");
+    @GetMapping("/info")
+    @ResponseStatus(HttpStatus.OK)
+    public UserInfoResponse getUserInfo(@RequestParam String login) throws ValidationException {
+        log.debug("GET-request: getUserInfo (login={})", login);
+        if (login == null || login.isEmpty()) {
+            log.error("Login is empty");
+            throw new ValidationException("Login can't be empty!");
         }
-        return userService.getUserByLogin(login);
+        return new UserInfoResponse(userService.getUserByLogin(login));
     }
 
     @PostMapping("/create")
-    public UserEntity createUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserInfoResponse createUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
         log.debug("POST-request: createUser (user={})", user);
-        return userService.createUser(user);
+        return new UserInfoResponse(userService.createUser(user));
+    }
+
+    @PutMapping("/update")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
+        log.debug("PUT-request: updateUser (user={})", user);
+        userService.updateUser(user);
     }
 
     @DeleteMapping("/delete")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean deleteUserByLogin (@RequestParam String login) {
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserByLogin (@RequestParam String login) {
         log.debug("DELETE-request: deleteUserByLogin (login={})", login);
-        return userService.deleteUser(login);
+        userService.deleteUser(login);
     }
 }
