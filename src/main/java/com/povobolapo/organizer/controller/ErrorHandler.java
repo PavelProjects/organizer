@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
 import java.util.Locale;
 
 @RestControllerAdvice
@@ -50,5 +51,12 @@ public class ErrorHandler {
     public ErrorResponse accessDeniedException(AccessDeniedException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Permission denied", exc);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse authException(AuthenticationException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Current user not authenticated");
     }
 }

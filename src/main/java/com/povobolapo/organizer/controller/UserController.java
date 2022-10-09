@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import javax.validation.Valid;
 
 @RestController
@@ -44,14 +45,14 @@ public class UserController {
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public void updateUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
+    public void updateUser(@Valid @RequestBody UserRequestBody user) throws ValidationException, AuthenticationException {
         log.debug("PUT-request: updateUser (user={})", user);
         userService.updateUser(user);
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUserByLogin (@RequestParam String login) {
+    public void deleteUserByLogin (@RequestParam String login) throws AuthenticationException {
         log.debug("DELETE-request: deleteUserByLogin (login={})", login);
         userService.deleteUser(login);
     }

@@ -15,43 +15,66 @@ public class NotificationEntity implements Serializable {
     @Column(name = "creation_date")
     private LocalDate creationDate;
 
-    @Column(name = "user_login")
-    private String userLogin;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_user", referencedColumnName = "login")
+    private UserEntity user;
 
-    @Column(name = "task_id")
-    private Integer taskId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task", referencedColumnName = "id")
+    private TaskEntity task;
 
-    @Column(name = "creator")
-    private String creatorLogin;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator", referencedColumnName = "login")
+    private UserEntity creator;
 
     @Column(name = "body")
     private String body;
 
-    @Column(name = "type")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type", referencedColumnName = "name")
+    private DictNotifyType type;
+
+    @Column(name = "checked")
+    private boolean checked = false;
 
     public NotificationEntity() {
     }
 
-    public NotificationEntity(Integer id, LocalDate creationDate, String userLogin,
-                              Integer taskId, String creatorLogin, String body, String type) {
+    public NotificationEntity(Integer id, LocalDate creationDate, UserEntity user,
+                              TaskEntity task, UserEntity creator, String body, DictNotifyType type) {
         this.id = id;
         this.creationDate = creationDate;
-        this.userLogin = userLogin;
-        this.taskId = taskId;
-        this.creatorLogin = creatorLogin;
+        this.user = user;
+        this.task = task;
+        this.creator = creator;
         this.body = body;
         this.type = type;
     }
 
-    public NotificationEntity(LocalDate creationDate, String userLogin,
-                              Integer taskId, String creatorLogin, String body, String type) {
+    public NotificationEntity(LocalDate creationDate, UserEntity user,
+                              TaskEntity task, UserEntity creator, String body, DictNotifyType type) {
         this.creationDate = creationDate;
-        this.userLogin = userLogin;
-        this.taskId = taskId;
-        this.creatorLogin = creatorLogin;
+        this.user = user;
+        this.task = task;
+        this.creator = creator;
         this.body = body;
         this.type = type;
+    }
+
+    public NotificationEntity(UserEntity user, String body, DictNotifyType notifyType) {
+        this.user = user;
+        this.body = body;
+        this.type = notifyType;
+
+        this.creationDate = LocalDate.now();
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public Integer getId() {
@@ -70,28 +93,28 @@ public class NotificationEntity implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public String getUserLogin() {
-        return userLogin;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public Integer getTaskId() {
-        return taskId;
+    public TaskEntity getTask() {
+        return task;
     }
 
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 
-    public String getCreatorLogin() {
-        return creatorLogin;
+    public UserEntity getCreator() {
+        return creator;
     }
 
-    public void setCreatorLogin(String creatorLogin) {
-        this.creatorLogin = creatorLogin;
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
     }
 
     public String getBody() {
@@ -102,11 +125,11 @@ public class NotificationEntity implements Serializable {
         this.body = body;
     }
 
-    public String getType() {
+    public DictNotifyType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(DictNotifyType type) {
         this.type = type;
     }
 }
