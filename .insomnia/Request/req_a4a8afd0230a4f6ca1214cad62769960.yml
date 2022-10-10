@@ -1,9 +1,9 @@
 _id: req_a4a8afd0230a4f6ca1214cad62769960
 type: Request
 parentId: fld_18168b6a6c25458c9fad7183ecf99f12
-modified: 1664826564830
+modified: 1664832892991
 created: 1664749372392
-url: "{{ _.base_url }}/task/create"
+url: http://{{ _.baseUrl }}/task/create
 name: Create task
 description: ""
 method: POST
@@ -13,14 +13,18 @@ body:
     {
     	"name" : "task_first",
     	"description" : "testing task controller",
-    	"author" : "task_test",
+    	"author" : "{{ _.userName }}",
     	"deadline" : "2023-10-07"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-authentication: {}
+    id: pair_97c72bb3415f44a7916944cd6a48a7a1
+authentication:
+  type: bearer
+  token: "{% response 'body', 'req_4d22147ae24a45c6af15b9fb300092e5',
+    'b64::JC50b2tlbg==::46b', 'when-expired', 3600 %}"
 metaSortKey: -1664749372392
 isPrivate: false
 settingStoreCookies: true

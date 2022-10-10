@@ -1,8 +1,9 @@
-package com.povobolapo.organizer.controller.models;
+package com.povobolapo.organizer.controller.model;
 
 import com.povobolapo.organizer.model.UserEntity;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class UserRequestBody {
 

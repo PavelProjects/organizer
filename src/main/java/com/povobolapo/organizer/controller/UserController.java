@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.models.UserRequestBody;
+import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.UserService;
@@ -35,7 +35,6 @@ public class UserController {
         return userService.getUserByLogin(login);
     }
 
-    //todo надо сделать авторизацию, а то у меня 403
     @PostMapping("/create")
     public UserEntity createUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
         log.debug("POST-request: createUser (user={})", user);

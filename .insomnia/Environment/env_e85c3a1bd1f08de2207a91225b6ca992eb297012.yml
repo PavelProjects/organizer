@@ -1,14 +1,16 @@
 _id: env_e85c3a1bd1f08de2207a91225b6ca992eb297012
 type: Environment
 parentId: wrk_0eeeefd0bfa148c6ad497d5fd6c7b85c
-modified: 1664826462230
+modified: 1664832921184
 created: 1664221875758
 name: Base Environment
 data:
-  base_url: http://localhost:8080
+  userName: autotest_user
+  password: "1"
 dataPropertyOrder:
   "&":
-    - base_url
+    - userName
+    - password
 color: null
 isPrivate: false
 metaSortKey: 1664221875758
