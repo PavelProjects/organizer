@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.controller.model;
 
+import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
-import com.povobolapo.organizer.model.UserEntity;
 
 import java.util.Date;
 
@@ -9,23 +9,25 @@ public class TaskInfoResponse {
 
 
     private Integer id;
-    //TODO поменять на userInfoResponse
-    private UserEntity author;
+    private UserInfoResponse author;
     private String name;
+    private DictTaskStatus status;
     private Date deadline;
 
-    public TaskInfoResponse(Integer id, UserEntity author, String name, Date deadline) {
+    public TaskInfoResponse(Integer id, UserInfoResponse author, String name, DictTaskStatus status, Date deadline) {
         this.id = id;
         this.author = author;
         this.name = name;
+        this.status = status;
         this.deadline = deadline;
     }
 
     public TaskInfoResponse(TaskEntity task) {
         this.id = task.getId();
-        this.author = task.getAuthor();
+        this.author = new UserInfoResponse(task.getAuthor());
         this.name = task.getName();
         this.deadline = task.getDeadline();
+        this.status = task.getTaskStatus();
     }
 
     public Integer getId() {
@@ -36,11 +38,11 @@ public class TaskInfoResponse {
         this.id = id;
     }
 
-    public UserEntity getAuthor() {
+    public UserInfoResponse getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserEntity author) {
+    public void setAuthor(UserInfoResponse author) {
         this.author = author;
     }
 
@@ -58,5 +60,13 @@ public class TaskInfoResponse {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
+    }
+
+    public DictTaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DictTaskStatus status) {
+        this.status = status;
     }
 }
