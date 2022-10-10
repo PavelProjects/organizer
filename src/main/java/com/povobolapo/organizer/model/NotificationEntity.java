@@ -16,15 +16,19 @@ public class NotificationEntity implements Serializable {
     private LocalDate creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_user", referencedColumnName = "login")
+    @JoinColumn(name = "user_login", referencedColumnName = "login")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "task", referencedColumnName = "id")
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
     private TaskEntity task;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private CommentEntity comment;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator", referencedColumnName = "login")
+    @JoinColumn(name = "creator_login", referencedColumnName = "login")
     private UserEntity creator;
 
     @Column(name = "body")
@@ -51,22 +55,19 @@ public class NotificationEntity implements Serializable {
         this.type = type;
     }
 
-    public NotificationEntity(LocalDate creationDate, UserEntity user,
-                              TaskEntity task, UserEntity creator, String body, DictNotifyType type) {
-        this.creationDate = creationDate;
+    public NotificationEntity(UserEntity user, DictNotifyType notifyType) {
         this.user = user;
-        this.task = task;
-        this.creator = creator;
-        this.body = body;
-        this.type = type;
-    }
-
-    public NotificationEntity(UserEntity user, String body, DictNotifyType notifyType) {
-        this.user = user;
-        this.body = body;
         this.type = notifyType;
 
         this.creationDate = LocalDate.now();
+    }
+
+    public CommentEntity getComment() {
+        return comment;
+    }
+
+    public void setComment(CommentEntity comment) {
+        this.comment = comment;
     }
 
     public boolean isChecked() {

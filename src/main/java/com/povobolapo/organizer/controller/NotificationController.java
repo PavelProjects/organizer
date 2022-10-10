@@ -44,6 +44,6 @@ public class NotificationController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteNotification(@RequestBody NotificationRequest notificationRequest) throws AuthenticationException {
         log.info("DELETE-request: deleteNotification(request={})", notificationRequest);
-        notificationService.deleteNotifications(notificationRequest.getIds());
+        notificationService.deleteNotificationsByIds(notificationRequest.getIds());
     }
 }

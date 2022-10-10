@@ -1,5 +1,8 @@
 package com.povobolapo.organizer.config;
 
+import com.povobolapo.organizer.service.NotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -19,6 +22,8 @@ import java.util.Properties;
 @EnableJpaRepositories("com.povobolapo.organizer.repository")
 @EnableTransactionManagement
 public class ApplicationConfig {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
+
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";
     private static final String PROP_DATABASE_URL = "db.url";

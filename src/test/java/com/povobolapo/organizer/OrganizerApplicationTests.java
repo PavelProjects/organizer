@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -96,11 +95,12 @@ class OrganizerApplicationTests {
 	@Test
 	@Transactional
 	void testNotifications() throws AuthenticationException {
-		// Создаем тестовое уведомление
+		// Создаем тестовые уведомления
 		notificationService.createSystemNotification(AUTOTEST_LOGIN, "unit_test_1");
-		// Получаем все уведомлени юзера и убеждаемся, что наше есть в результате
+
+		// Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
 		List<NotificationEntity> notifications = notificationService.getUserNotifications(AUTOTEST_LOGIN);
-		assert notifications != null;
+		assert notifications != null && !notifications.isEmpty();
 		List<Integer> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
 		assert ids.size() == 1;
 
@@ -111,7 +111,7 @@ class OrganizerApplicationTests {
 
 		// Авторизуемся под юзером, удаляем наше уведомление и проверяем, что бы оно действительно удалилось
 		setSecurityContext(AUTOTEST_LOGIN);
-		notificationService.deleteNotifications(ids);
+		notificationService.deleteNotificationsByIds(ids);
 		notifications = notificationService.getUserNotifications(AUTOTEST_LOGIN);
 		assert notifications.stream().noneMatch(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked());
 	}
