@@ -1,8 +1,8 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.models.TaskInfoResponse;
-import com.povobolapo.organizer.controller.models.TaskRequestBody;
-import com.povobolapo.organizer.controller.models.TaskSearchRequest;
+import com.povobolapo.organizer.controller.model.TaskInfoResponse;
+import com.povobolapo.organizer.controller.model.TaskRequestBody;
+import com.povobolapo.organizer.controller.model.TaskSearchRequest;
 import com.povobolapo.organizer.service.TaskService;
 import com.povobolapo.organizer.model.TaskEntity;
 import org.slf4j.Logger;

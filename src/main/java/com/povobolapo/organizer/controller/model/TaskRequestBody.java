@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.controller.models;
+package com.povobolapo.organizer.controller.model;
 
 import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
