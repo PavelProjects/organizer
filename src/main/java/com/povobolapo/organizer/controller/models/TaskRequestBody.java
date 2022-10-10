@@ -9,6 +9,8 @@ import java.util.Date;
 
 public class TaskRequestBody {
 
+    @Positive
+    private Integer id;
     @Size(max = 128)
     @NotNull
     private String name;
@@ -72,8 +74,19 @@ public class TaskRequestBody {
         this.deadline = deadline;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public TaskEntity toTask() {
         TaskEntity task = new TaskEntity();
+        if (this.id != null) {
+            task.setId(this.id);
+        }
         task.setName(this.name);
         task.setAuthor(new UserEntity(this.author));
         if (this.description != null) {

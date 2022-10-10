@@ -1,6 +1,8 @@
 package com.povobolapo.organizer.controller;
 
+import com.povobolapo.organizer.controller.models.TaskInfoResponse;
 import com.povobolapo.organizer.controller.models.TaskRequestBody;
+import com.povobolapo.organizer.controller.models.TaskSearchRequest;
 import com.povobolapo.organizer.service.TaskService;
 import com.povobolapo.organizer.model.TaskEntity;
 import org.slf4j.Logger;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @RestController()
@@ -25,11 +29,13 @@ public class TaskController {
 
     //todo Pageable improve probably????
     @GetMapping("/all")
-    public List<TaskEntity> getAllTasks(
-            @RequestParam(defaultValue = "0", required = false) @Positive Integer page,
-            @RequestParam(defaultValue = "10", required = false) @Positive Integer size) {
-        log.debug("GET-request: getAllTasks (page={}; size={})", page, size);
-        return taskService.getAllTasks(page, size);
+    public List<TaskInfoResponse> getAllTasks(@RequestBody(required = false) TaskSearchRequest request) {
+        log.debug("GET-request: getAllTasks (request={})", request);
+        if (request == null) {
+            request = new TaskSearchRequest();
+        }
+        return taskService.getAllTasks(request).stream()
+                .map(TaskInfoResponse::new).collect(Collectors.toList());
     }
 
     @GetMapping
@@ -39,10 +45,24 @@ public class TaskController {
         return taskService.getTaskById(id);
     }
 
+    @GetMapping("/info")
+    public TaskInfoResponse getTaskInfoById(
+            @RequestParam @Positive Integer id) {
+        log.debug("GET-request: getTaskInfoById (id={})", id);
+        return new TaskInfoResponse(taskService.getTaskById(id));
+    }
+
     @PostMapping("/create")
-    public TaskEntity createTask(@RequestBody TaskRequestBody task) {
+    public TaskInfoResponse createTask(@RequestBody TaskRequestBody task) {
         //todo PASS LOGIN FROM AUTH
-        return taskService.createNewTask(task.getAuthor(), task);
+        return new TaskInfoResponse(taskService.createNewTask(task.getAuthor(), task));
+    }
+
+    @PutMapping
+    public TaskInfoResponse updateTask(@RequestBody TaskRequestBody task) {
+        log.debug("GET-request: updateTask: (id={})", task.getId());
+        Objects.requireNonNull(task.getId(), "ID can't be NULL in update-method!");
+        return new TaskInfoResponse(taskService.updateTask(task));
     }
 
     @DeleteMapping("/delete")

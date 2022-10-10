@@ -41,6 +41,11 @@ public class TaskEntity implements Serializable {
         this.description = description;
     }
 
+    public TaskEntity(DictTaskStatus dictTaskStatus, UserEntity author) {
+        this.dictTaskStatus = dictTaskStatus;
+        this.author = author;
+    }
+
     public UserEntity getAuthor() {
         return author;
     }
