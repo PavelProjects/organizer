@@ -21,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @SpringBootTest(classes = OrganizerApplication.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -53,7 +56,7 @@ class OrganizerApplicationTests {
 	void testCreateUser() {
 		// Создаем юзера
 		UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "bombastik"));
-		assert user.getId() > 0;
+		assertTrue(user.getId() > 0);
 
 		// Делаем вид, что удалить пытается другой юзер
 		setSecurityContext("autotest_user");
