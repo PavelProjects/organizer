@@ -22,16 +22,22 @@ public class TaskRequestBody {
     private String author;
 
     @Size(max = 32)
-    private String status = "new"; //Дефолтное значение
+    private String status;
 
     private Date deadline;
 
     public TaskRequestBody() {
     }
 
-    public TaskRequestBody(String name, String author) {
+    public TaskRequestBody(String name, String description, String author) {
         this.name = name;
+        this.description = description;
         this.author = author;
+    }
+
+    public TaskRequestBody(Integer id, String description) {
+        this.id = id;
+        this.description = description;
     }
 
     public String getName() {
@@ -92,7 +98,7 @@ public class TaskRequestBody {
         if (this.description != null) {
             task.setDescription(this.description);
         }
-        task.setTaskStatus(new DictTaskStatus(this.status));
+        task.setTaskStatus(new DictTaskStatus("new"));
         if (this.deadline != null) {
             task.setDeadline(this.deadline);
         }

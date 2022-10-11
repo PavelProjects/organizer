@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang3.StringUtils;
@@ -39,11 +40,14 @@ public class TaskService {
     @Transactional
     public List<TaskEntity> getAllTasks(TaskSearchRequest request) {
         log.info("Searching for allTasks (request={})", request);
-        PageRequest pagesRequest = PageRequest.of(request.getPage(), request.getSize());
+        // Тут собирается тело запроса для получения страницы
+        // Дефолтные значения: страница 0, размер 10, сортировка ASC по столбцу id.
+        PageRequest pagesRequest = PageRequest.of(request.getPage(), request.getSize(),
+                Sort.by(Sort.Direction.fromString(request.getSort()), request.getSortBy()));
+        //Тут собирается пример запроса, если требуется сортировка по автору и/или статусу
         Example<TaskEntity> example = createExampleForSearch(request);
-
+        //Получаем страницу из БД
         Page<TaskEntity> found = taskRepository.findAll(example, pagesRequest);
-
         log.debug("Found next values: " + found.getContent());
         return found.getContent();
     }
@@ -70,6 +74,7 @@ public class TaskService {
     }
 
     //TODO авторизация, чтобы обновлял только автор/админ
+    //TODO рефакторинг, надо унифицировать или упростить апдейт, чтобы обновлялись только notnull поля
     @Transactional
     public TaskEntity updateTask(TaskRequestBody taskRequest) {
         Optional<TaskEntity> baseTask = taskRepository.findById(taskRequest.getId());
@@ -85,7 +90,9 @@ public class TaskService {
             DictTaskStatus status = taskStatusService.getTaskStatus(taskRequest.getStatus());
             if (status != null) baseTask.get().setTaskStatus(status);
         }
-        baseTask.get().setName(taskRequest.getName());
+        if (taskRequest.getName() != null) {
+            baseTask.get().setName(taskRequest.getName());
+        }
         return taskRepository.save(baseTask.get());
     }
 

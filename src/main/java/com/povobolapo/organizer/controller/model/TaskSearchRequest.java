@@ -4,16 +4,18 @@ public class TaskSearchRequest {
     private int page = 0;
     private int size = 10;
     private String sort = "ASC";
+    private String sortBy = "id";
     private String login = null;
     private String status = null;
 
     public TaskSearchRequest() {
     }
 
-    public TaskSearchRequest(int page, int size, String sort, String login, String status) {
+    public TaskSearchRequest(int page, int size, String sort, String sortBy, String login, String status) {
         this.page = page;
         this.size = size;
         this.sort = sort;
+        this.sortBy = sortBy;
         this.login = login;
         this.status = status;
     }
@@ -46,6 +48,14 @@ public class TaskSearchRequest {
 
     public void setSort(String sort) {
         this.sort = sort;
+    }
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
     }
 
     public String getLogin() {
