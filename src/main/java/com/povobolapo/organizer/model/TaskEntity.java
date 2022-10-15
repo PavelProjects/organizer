@@ -3,6 +3,7 @@ package com.povobolapo.organizer.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "_task")
@@ -39,6 +40,11 @@ public class TaskEntity implements Serializable {
     public TaskEntity(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public TaskEntity(DictTaskStatus dictTaskStatus, UserEntity author) {
+        this.dictTaskStatus = dictTaskStatus;
+        this.author = author;
     }
 
     public UserEntity getAuthor() {
@@ -102,5 +108,20 @@ public class TaskEntity implements Serializable {
         return String.format(
                 "id: %s\nname: %s\n", id, name
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskEntity that = (TaskEntity) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(creationDate.getTime(), that.creationDate.getTime())
+                && Objects.equals(author.getLogin(), that.author.getLogin());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
