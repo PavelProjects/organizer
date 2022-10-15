@@ -1,13 +1,16 @@
 package com.povobolapo.organizer.service;
 
+import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.*;
 import com.povobolapo.organizer.repository.NotificationRepository;
 import com.povobolapo.organizer.repository.NotifyTypeRepository;
+import com.povobolapo.organizer.utils.EventDispatcher;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
+@Scope("singleton")
 public class NotificationService {
     private static final int MAX_USER_NOTIFICATIONS = 100;
     // TODO WebSocket для получения уведомлений; Тесты в insomnia
@@ -27,18 +31,21 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotifyTypeRepository notifyTypeRepository;
     private final UserService userService;
+    private final EventDispatcher eventDispatcher;
 
     @Autowired
     public NotificationService(NotificationRepository notificationRepository,
                                NotifyTypeRepository notifyTypeRepository,
-                               UserService userService) {
+                               UserService userService,
+                               EventDispatcher eventDispatcher){
         this.notificationRepository = notificationRepository;
         this.notifyTypeRepository = notifyTypeRepository;
         this.userService = userService;
+        this.eventDispatcher = eventDispatcher;
     }
 
-    public List<NotificationEntity> getUserNotifications(String login) {
-        return notificationRepository.findByUserLogin(login);
+    public List<NotificationEntity> getUserNotifications() throws AuthenticationException {
+        return notificationRepository.findByUserLogin(userService.authenticatedUserName());
     }
 
     // Метод для создания системных уведмолений
@@ -51,6 +58,12 @@ public class NotificationService {
         notificationEntity.setBody(body);
         notificationRepository.save(notificationEntity);
         log.debug("System notification created");
+
+        try {
+            dispatchNotification(notificationEntity);
+        } catch (Exception ex) {
+            log.error("Failed to dispatch notification", ex);
+        }
     }
 
     // Метод создания уведомлений для комментариев
@@ -63,6 +76,12 @@ public class NotificationService {
         notificationEntity.setCreator(comment.getAuthor());
         notificationRepository.save(notificationEntity);
         log.debug("Comment notification created");
+
+        try {
+            dispatchNotification(notificationEntity);
+        } catch (Exception ex) {
+            log.error("Failed to dispatch notification", ex);
+        }
     }
 
     // Метод создания уведомлений для тасок
@@ -76,6 +95,22 @@ public class NotificationService {
         notificationEntity.setCreator(task.getAuthor());
         notificationRepository.save(notificationEntity);
         log.debug("Task notification created");
+
+        try {
+            dispatchNotification(notificationEntity);
+        } catch (Exception ex) {
+            log.error("Failed to dispatch notification", ex);
+        }
+    }
+
+    // Рассылка системного события
+    // Регистрация хендлеров в RuntimeConfig
+    private void dispatchNotification(NotificationEntity notificationEntity) throws Exception {
+        eventDispatcher.dispatch(new NotificationMessage(
+                notificationEntity.getUser(),
+                notificationEntity.getCreator(),
+                notificationEntity.getType().getCaption(),
+                notificationEntity.getBody()));
     }
 
     private void checkNotificationCount(String login) {
@@ -94,9 +129,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void markNotificationsChecked(List<Integer> notificationIds) {
+    public void markNotificationsChecked(List<Integer> notificationIds) throws AuthenticationException {
         log.debug("Marking notifications checked {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findAllById(notificationIds);
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
         if (notificationEntities.isEmpty()) {
             log.warn("No notification were found");
             return;
@@ -110,7 +145,7 @@ public class NotificationService {
     @Transactional
     public void deleteNotificationsByIds(List<Integer> notificationIds) throws AuthenticationException {
         log.debug("Deleting notifications {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findAllById(notificationIds);
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
         if (notificationEntities.isEmpty()) {
             log.debug("No notification were found");
             return;

@@ -3,6 +3,8 @@ package com.povobolapo.organizer.controller;
 import com.povobolapo.organizer.controller.model.ErrorResponse;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -54,9 +56,23 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse authException(AuthenticationException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Current user not authenticated");
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Token expired");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse wrongToken(JwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Wrong token");
     }
 }

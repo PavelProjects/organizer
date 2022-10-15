@@ -1,19 +1,20 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.config.JwtTokenUtil;
+import com.povobolapo.organizer.service.*;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.NotificationEntity;
 import com.povobolapo.organizer.model.UserEntity;
-import com.povobolapo.organizer.service.NotificationService;
-import com.povobolapo.organizer.service.TTaskService;
-import com.povobolapo.organizer.service.UserDetailsServiceImpl;
-import com.povobolapo.organizer.service.UserService;
+import com.povobolapo.organizer.utils.Event;
+import com.povobolapo.organizer.utils.EventDispatcher;
+import com.povobolapo.organizer.utils.EventHandler;
+import com.povobolapo.organizer.utils.JwtTokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,23 +34,18 @@ class OrganizerApplicationTests {
     private TTaskService service;
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
-
 	@Autowired
 	private NotificationService notificationService;
 
 	@Test
-	public void jwtTest() {
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername("autotest_user");
-
-		final String token = jwtTokenUtil.generateToken(userDetails);
-		System.out.println(token);
+	public void authTest() {
+		String token = jwtTokenUtil.generateToken(AUTOTEST_LOGIN);
+		assert StringUtils.isNotBlank(token);
+		assert null != jwtTokenUtil.validateToken(token);
 	}
 
 	@Test
@@ -95,24 +91,24 @@ class OrganizerApplicationTests {
 	@Test
 	@Transactional
 	void testNotifications() throws AuthenticationException {
+		setSecurityContext(AUTOTEST_LOGIN);
+
 		// Создаем тестовые уведомления
 		notificationService.createSystemNotification(AUTOTEST_LOGIN, "unit_test_1");
 
 		// Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
-		List<NotificationEntity> notifications = notificationService.getUserNotifications(AUTOTEST_LOGIN);
+		List<NotificationEntity> notifications = notificationService.getUserNotifications();
 		assert notifications != null && !notifications.isEmpty();
 		List<Integer> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
 		assert ids.size() == 1;
 
 		// Помечаем уведомление просмотренным и проверяем, что в бд оно обновилось
 		notificationService.markNotificationsChecked(ids);
-		notifications = notificationService.getUserNotifications(AUTOTEST_LOGIN);
+		notifications = notificationService.getUserNotifications();
 		assert notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked()).count() == 1;
 
-		// Авторизуемся под юзером, удаляем наше уведомление и проверяем, что бы оно действительно удалилось
-		setSecurityContext(AUTOTEST_LOGIN);
 		notificationService.deleteNotificationsByIds(ids);
-		notifications = notificationService.getUserNotifications(AUTOTEST_LOGIN);
+		notifications = notificationService.getUserNotifications();
 		assert notifications.stream().noneMatch(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked());
 	}
 
@@ -121,5 +117,26 @@ class OrganizerApplicationTests {
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 				userDetails, null, userDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+	}
+
+	@Test
+	void test() {
+		EventDispatcher eventDispatcher = new EventDispatcher();
+		DummyHandler h = new DummyHandler();
+		eventDispatcher.registerHandler(DummyEvent.class, (EventHandler<DummyEvent>) h::onEvent);
+		try {
+			eventDispatcher.dispatch(new DummyEvent());
+		} catch (Exception ex) {
+			assert ((RuntimeException) ex).getMessage().equals("yeah");
+		}
+	}
+
+	private class DummyEvent implements Event {
+	}
+	private class DummyHandler implements EventHandler<DummyEvent>{
+		@Override
+		public void onEvent(DummyEvent event) throws Exception {
+			throw new RuntimeException("yeah");
+		}
 	}
 }

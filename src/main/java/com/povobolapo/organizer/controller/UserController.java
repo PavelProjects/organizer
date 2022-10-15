@@ -5,6 +5,9 @@ import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.UserService;
+import com.povobolapo.organizer.utils.EventDispatcher;
+import com.povobolapo.organizer.websocket.SpringContext;
+import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,11 @@ public class UserController {
         if (login == null || login.isEmpty()) {
             log.error("Login is empty");
             throw new ValidationException("Login can't be empty!");
+        }
+        try {
+            SpringContext.getBean(EventDispatcher.class).dispatch(new NotificationMessage(userService.getUserByLogin(login), "test", "test body"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return new UserInfoResponse(userService.getUserByLogin(login));
     }

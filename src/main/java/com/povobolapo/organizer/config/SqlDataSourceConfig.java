@@ -1,6 +1,5 @@
 package com.povobolapo.organizer.config;
 
-import com.povobolapo.organizer.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +20,8 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories("com.povobolapo.organizer.repository")
 @EnableTransactionManagement
-public class ApplicationConfig {
-    private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
+public class SqlDataSourceConfig {
+    private static final Logger log = LoggerFactory.getLogger(SqlDataSourceConfig.class);
 
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";
@@ -44,6 +43,7 @@ public class ApplicationConfig {
         dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
         dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
+        log.info("Created datasource with:\nurl::{}\nusername::{}", dataSource.getUrl(), dataSource.getUsername());
         return dataSource;
     }
 
