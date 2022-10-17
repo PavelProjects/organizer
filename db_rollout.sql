@@ -77,6 +77,6 @@ create table _user_task (
 );
 
 insert into dict_task_status (name, caption) values ('new', 'New task');
-insert into _user (login, password, name) values ('autotest_user', '1', 'main buddy');
+insert into _user (login, password, name) values ('autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'main buddy');
 
 commit;
