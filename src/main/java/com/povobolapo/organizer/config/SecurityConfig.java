@@ -25,10 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private UserRepository userRepo;
-    private UserDetailsServiceImpl userDetailsServiceImpl;
     private SecurityFilter securityFilter;
-    private SecurityAuthenticationEntryPoint securityAuthenticationEntryPoint;
 
     @Value("${springdoc.api-docs.path}")
     private String restApiDocPath;
@@ -37,12 +34,8 @@ public class SecurityConfig {
     private String swaggerPath;
 
     @Autowired
-    public SecurityConfig(UserRepository userRepo, UserDetailsServiceImpl userDetailsServiceImpl,
-                          SecurityFilter securityFilter, SecurityAuthenticationEntryPoint securityAuthenticationEntryPoint) {
-        this.userRepo = userRepo;
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    public SecurityConfig(SecurityFilter securityFilter) {
         this.securityFilter = securityFilter;
-        this.securityAuthenticationEntryPoint = securityAuthenticationEntryPoint;
     }
 
     @Bean
@@ -55,6 +48,7 @@ public class SecurityConfig {
                 // Добавляем ендпоинты, для которых не нужна авторизация
                 .antMatchers("/user/create").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/notification/ws").permitAll()
                 .antMatchers(swaggerPath + "/**").permitAll()
                 .antMatchers(restApiDocPath + "/**").permitAll()
                 // Для всех остальных включаем авторизацию

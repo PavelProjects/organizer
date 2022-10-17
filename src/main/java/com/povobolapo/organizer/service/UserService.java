@@ -10,7 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.PermissionDeniedDataAccessException;
+import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import javax.naming.AuthenticationException;
+import javax.validation.constraints.NotEmpty;
 
 
 @Component
+@Scope("singleton")
 public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
@@ -54,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UserRequestBody userBody) {
+    public void updateUser(UserRequestBody userBody) throws AuthenticationException {
         // Менять можно только свою учетку
         if (!canUpdateUser(userBody.getLogin())) {
             throw new AccessDeniedException("Permission denied!");
@@ -78,7 +81,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String login) throws ValidationException {
+    public void deleteUser(String login) throws ValidationException, AuthenticationException {
         UserEntity user = userRepository.findByLogin(login);
         if (user == null) {
             throw new NotFoundException("User with login [" + login + "] not found");
@@ -102,16 +105,21 @@ public class UserService {
     }
 
     // Проверяет, может ли текущий юзер менять юзера
-    private boolean canUpdateUser(String userLoginToChange) {
+    private boolean canUpdateUser(String userLoginToChange) throws AuthenticationException {
         String currentUser = authenticatedUserName();
         log.warn(String.format("User %s trying to edit user %s", currentUser, userLoginToChange));
-        return currentUser.equals(userLoginToChange);
+        return StringUtils.equals(userLoginToChange, currentUser);
     }
 
-    private String authenticatedUserName() {
+    // Гарантируется, что вернется не пустое значение
+    @NonNull
+    @NotEmpty
+    public String authenticatedUserName() throws AuthenticationException {
         // Получем из контекста безопасности какой юзер сейчас делает запрос
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        Objects.requireNonNull(currentUser, "Current user didn't authenticated!");
+        if (currentUser == null || StringUtils.isBlank(currentUser.getName())) {
+            throw new AuthenticationException("Current user didn't authenticate!");
+        }
         return currentUser.getName();
     }
 

@@ -1,5 +1,15 @@
 package com.povobolapo.organizer;
 
+import com.povobolapo.organizer.service.*;
+import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.exception.NotFoundException;
+import com.povobolapo.organizer.model.NotificationEntity;
+import com.povobolapo.organizer.model.UserEntity;
+import com.povobolapo.organizer.utils.Event;
+import com.povobolapo.organizer.utils.EventDispatcher;
+import com.povobolapo.organizer.utils.EventHandler;
+import com.povobolapo.organizer.utils.JwtTokenUtil;
+import org.apache.commons.lang3.StringUtils;
 import com.povobolapo.organizer.config.JwtTokenUtil;
 import com.povobolapo.organizer.controller.model.TaskRequestBody;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
@@ -16,10 +26,15 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.naming.AuthenticationException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,31 +44,43 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrganizerApplicationTests {
 	private static final String TEST_USER_LOGIN = "autotest_user_2";
+	private static final String AUTOTEST_LOGIN = "autotest_user";
 
     @Autowired
     private TaskService taskService;
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
+	@Autowired
+	private NotificationService notificationService;
 
 	@Test
-	@Order(1)
-	public void jwtTest() {
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername("autotest_user");
+	public void authTest() {
+		String token = jwtTokenUtil.generateToken(AUTOTEST_LOGIN);
+		assert StringUtils.isNotBlank(token);
+		assert null != jwtTokenUtil.validateToken(token);
+	}
 
-		final String token = jwtTokenUtil.generateToken(userDetails);
-		System.out.println(token);
+	@Test
+	void checkCurrentUser() throws AuthenticationException {
+		// Пробуем получить текущего юзера, когда никто не авторизовался
+		try {
+			userService.authenticatedUserName();
+		} catch (AuthenticationException exc) {
+			assert !exc.getMessage().isEmpty();
+		}
+
+		// Проверяем, что при авторизации мы получим правильного юзера
+		setSecurityContext(AUTOTEST_LOGIN);
+		assert StringUtils.equals(AUTOTEST_LOGIN, userService.authenticatedUserName());
 	}
 
 	@Test
 	@Transactional
-	void testCreateUser() {
+	void testManageUser() throws AuthenticationException{
 		// Создаем юзера
 		UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "bombastik"));
 		assertTrue(user.getId() > 0);
@@ -78,6 +105,29 @@ class OrganizerApplicationTests {
 	}
 
 	@Test
+	@Transactional
+	void testNotifications() throws AuthenticationException {
+		setSecurityContext(AUTOTEST_LOGIN);
+
+		// Создаем тестовые уведомления
+		notificationService.createSystemNotification(AUTOTEST_LOGIN, "unit_test_1");
+
+		// Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
+		List<NotificationEntity> notifications = notificationService.getUserNotifications();
+		assert notifications != null && !notifications.isEmpty();
+		List<Integer> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
+		assert ids.size() == 1;
+
+		// Помечаем уведомление просмотренным и проверяем, что в бд оно обновилось
+		notificationService.markNotificationsChecked(ids);
+		notifications = notificationService.getUserNotifications();
+		assert notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked()).count() == 1;
+
+		notificationService.deleteNotificationsByIds(ids);
+		notifications = notificationService.getUserNotifications();
+		assert notifications.stream().noneMatch(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked());
+  }
+  
 	void testCRUDTask() {
 		TaskRequestBody taskRequest = new TaskRequestBody("test_task_CRUD", "I am trying to test methods",
 				"autotest_user");
@@ -121,5 +171,26 @@ class OrganizerApplicationTests {
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 				userDetails, null, userDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+	}
+
+	@Test
+	void test() {
+		EventDispatcher eventDispatcher = new EventDispatcher();
+		DummyHandler h = new DummyHandler();
+		eventDispatcher.registerHandler(DummyEvent.class, (EventHandler<DummyEvent>) h::onEvent);
+		try {
+			eventDispatcher.dispatch(new DummyEvent());
+		} catch (Exception ex) {
+			assert ((RuntimeException) ex).getMessage().equals("yeah");
+		}
+	}
+
+	private class DummyEvent implements Event {
+	}
+	private class DummyHandler implements EventHandler<DummyEvent>{
+		@Override
+		public void onEvent(DummyEvent event) throws Exception {
+			throw new RuntimeException("yeah");
+		}
 	}
 }
