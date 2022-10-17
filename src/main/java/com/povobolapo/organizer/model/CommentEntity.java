@@ -18,11 +18,13 @@ public class CommentEntity implements Serializable {
     @Column(name = "creation_date")
     private LocalDate creationDate;
 
-    @Column(name = "author")
-    private String authorLogin;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_login", referencedColumnName = "login")
+    private UserEntity author;
 
-    @Column(name = "task_id")
-    private String taskId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    private TaskEntity task;
 
     @Column(name = "body")
     private String body;
@@ -30,18 +32,18 @@ public class CommentEntity implements Serializable {
     public CommentEntity() {
     }
 
-    public CommentEntity(LocalDate creationDate, String authorLogin, String taskId, String body) {
+    public CommentEntity(LocalDate creationDate, UserEntity author, TaskEntity task, String body) {
         this.creationDate = creationDate;
-        this.authorLogin = authorLogin;
-        this.taskId = taskId;
+        this.author = author;
+        this.task = task;
         this.body = body;
     }
 
-    public CommentEntity(String id, LocalDate creationDate, String authorLogin, String taskId, String body) {
+    public CommentEntity(String id, LocalDate creationDate, UserEntity author, TaskEntity task, String body) {
         this.id = id;
         this.creationDate = creationDate;
-        this.authorLogin = authorLogin;
-        this.taskId = taskId;
+        this.author = author;
+        this.task = task;
         this.body = body;
     }
 
@@ -61,20 +63,20 @@ public class CommentEntity implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public String getAuthorLogin() {
-        return authorLogin;
+    public UserEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthorLogin(String authorLogin) {
-        this.authorLogin = authorLogin;
+    public void setAuthor(UserEntity author) {
+        this.author = author;
     }
 
-    public String getTaskId() {
-        return taskId;
+    public TaskEntity getTask() {
+        return task;
     }
 
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 
     public String getBody() {

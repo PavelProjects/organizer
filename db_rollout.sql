@@ -76,6 +76,11 @@ create table _user_task (
     task_id char(8) not null references _task(id)
 );
 
+insert into dict_notify_type (name, caption) values
+    ('system', 'Система'),
+     ('comment', 'Комментарий'),
+     ('task', 'Задача');
+
 insert into dict_task_status (name, caption) values ('new', 'New task');
 insert into _user (login, password, name) values ('autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'main buddy');
 

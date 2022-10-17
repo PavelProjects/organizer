@@ -36,7 +36,6 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "author", referencedColumnName = "login")
     private UserEntity author;
 
-
     public TaskEntity() {
     }
 

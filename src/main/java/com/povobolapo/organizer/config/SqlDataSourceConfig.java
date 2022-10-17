@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -18,7 +20,9 @@ import java.util.Properties;
 @Configuration
 @EnableJpaRepositories("com.povobolapo.organizer.repository")
 @EnableTransactionManagement
-public class ApplicationConfig {
+public class SqlDataSourceConfig {
+    private static final Logger log = LoggerFactory.getLogger(SqlDataSourceConfig.class);
+
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";
     private static final String PROP_DATABASE_URL = "db.url";
@@ -31,6 +35,7 @@ public class ApplicationConfig {
     @Resource
     private Environment env;
 
+
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -38,6 +43,7 @@ public class ApplicationConfig {
         dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
         dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
+        log.info("Created datasource with:\nurl::{}\nusername::{}", dataSource.getUrl(), dataSource.getUsername());
         return dataSource;
     }
 

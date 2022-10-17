@@ -1,13 +1,19 @@
-package com.povobolapo.organizer.config;
+package com.povobolapo.organizer.utils;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
+import io.jsonwebtoken.JwtException;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -19,7 +25,10 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 3600000;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -49,6 +58,12 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
 
+    public String generateToken(String login) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        Objects.requireNonNull(userDetails);
+        return generateToken(userDetails);
+    }
+
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -63,11 +78,28 @@ public class JwtTokenUtil implements Serializable {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    //validate token
+    public UserDetails validateToken(String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new JwtException("Token is missing!");
+        }
+
+        String login = getUsernameFromToken(token);
+        if (StringUtils.isBlank(login)) {
+            throw new JwtException("Wrong user in token");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        if (validateToken(token, userDetails)) {
+            return userDetails;
+        } else {
+            throw new JwtException("Wrong user in token");
+        }
+    }
+
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
