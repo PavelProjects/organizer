@@ -1,0 +1,36 @@
+_id: req_b8d02fc0a6004cebb8b6f0fa1aa49ab2
+type: Request
+parentId: fld_18168b6a6c25458c9fad7183ecf99f12
+modified: 1664826568490
+created: 1664749513622
+url: "{{ _.base_url }}/user/create"
+name: Create test user
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"login" : "task_test",
+    	"password" : "pass",
+    	"name" : "hehus"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_3d5587145cea4f9fb490ba8a6678123f
+authentication:
+  type: basic
+  useISO88591: false
+  disabled: false
+  username: ""
+  password: ""
+metaSortKey: -1664749372442
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
