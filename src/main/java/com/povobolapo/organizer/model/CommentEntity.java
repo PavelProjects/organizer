@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,9 +10,10 @@ import java.time.LocalDate;
 @Table(name = "_comment")
 public class CommentEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "_comment_id_seq")
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
@@ -36,7 +39,7 @@ public class CommentEntity implements Serializable {
         this.body = body;
     }
 
-    public CommentEntity(Integer id, LocalDate creationDate, UserEntity author, TaskEntity task, String body) {
+    public CommentEntity(String id, LocalDate creationDate, UserEntity author, TaskEntity task, String body) {
         this.id = id;
         this.creationDate = creationDate;
         this.author = author;
@@ -44,11 +47,11 @@ public class CommentEntity implements Serializable {
         this.body = body;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

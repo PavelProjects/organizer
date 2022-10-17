@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,9 +10,10 @@ import java.time.LocalDate;
 @Table(name = "_notification")
 public class NotificationEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "_notification_id_seq")
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
@@ -44,7 +47,7 @@ public class NotificationEntity implements Serializable {
     public NotificationEntity() {
     }
 
-    public NotificationEntity(Integer id, LocalDate creationDate, UserEntity user,
+    public NotificationEntity(String id, LocalDate creationDate, UserEntity user,
                               TaskEntity task, UserEntity creator, String body, DictNotifyType type) {
         this.id = id;
         this.creationDate = creationDate;
@@ -55,6 +58,16 @@ public class NotificationEntity implements Serializable {
         this.type = type;
     }
 
+    public NotificationEntity(LocalDate creationDate, String userLogin,
+                              String taskId, String creatorLogin, String body, String type) {
+        this.creationDate = creationDate;
+        this.userLogin = userLogin;
+        this.taskId = taskId;
+        this.creatorLogin = creatorLogin;
+        this.body = body;
+        this.type = type;
+    }
+    
     public NotificationEntity(UserEntity user, DictNotifyType notifyType) {
         this.user = user;
         this.type = notifyType;
@@ -78,11 +91,11 @@ public class NotificationEntity implements Serializable {
         this.checked = checked;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

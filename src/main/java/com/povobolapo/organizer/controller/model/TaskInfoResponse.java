@@ -8,13 +8,13 @@ import java.util.Date;
 public class TaskInfoResponse {
 
 
-    private Integer id;
+    private String id;
     private UserInfoResponse author;
     private String name;
     private DictTaskStatus status;
     private Date deadline;
 
-    public TaskInfoResponse(Integer id, UserInfoResponse author, String name, DictTaskStatus status, Date deadline) {
+    public TaskInfoResponse(String id, UserInfoResponse author, String name, DictTaskStatus status, Date deadline) {
         this.id = id;
         this.author = author;
         this.name = name;
@@ -30,11 +30,11 @@ public class TaskInfoResponse {
         this.status = task.getTaskStatus();
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

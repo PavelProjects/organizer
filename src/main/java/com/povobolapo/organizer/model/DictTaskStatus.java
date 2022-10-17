@@ -1,6 +1,8 @@
 package com.povobolapo.organizer.model;
 
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,9 +13,10 @@ import static com.povobolapo.organizer.model.DictTaskStatus.NAME;
 public class DictTaskStatus implements Serializable {
     public static final String NAME = "dict_task_status";
     @Id
-    @GeneratedValue
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
     @Column(name = "name")
     private String name;
     @Column(name = "caption")
@@ -26,11 +29,11 @@ public class DictTaskStatus implements Serializable {
         this.name = name;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -9,9 +11,10 @@ import java.util.Objects;
 @Table(name = "_task")
 public class TaskEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "_task_id_seq")
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -54,11 +57,11 @@ public class TaskEntity implements Serializable {
         this.author = author;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

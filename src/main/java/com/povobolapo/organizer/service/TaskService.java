@@ -53,7 +53,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskEntity getTaskById(Integer id) {
+    public TaskEntity getTaskById(String id) {
         Optional<TaskEntity> task = taskRepository.findById(id);
         if (task.isEmpty()) {
             log.warn("Task is NULL.");
@@ -97,7 +97,7 @@ public class TaskService {
     }
 
     @Transactional
-    public boolean deleteTaskById(Integer id) {
+    public boolean deleteTaskById(String id) {
         Optional<TaskEntity> task = taskRepository.findById(id);
         if (task.isEmpty()) {
             log.warn("Task is NULL.");

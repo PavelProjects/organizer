@@ -10,7 +10,7 @@ import java.util.Date;
 public class TaskRequestBody {
 
     @Positive
-    private Integer id;
+    private String id;
     @Size(max = 128)
     @NotNull
     private String name;
@@ -35,7 +35,7 @@ public class TaskRequestBody {
         this.author = author;
     }
 
-    public TaskRequestBody(Integer id, String description) {
+    public TaskRequestBody(String id, String description) {
         this.id = id;
         this.description = description;
     }
@@ -80,11 +80,11 @@ public class TaskRequestBody {
         this.deadline = deadline;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
