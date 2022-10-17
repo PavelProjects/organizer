@@ -57,17 +57,19 @@ create table _notification (
     id char(8) primary key default getnextid(),
     creation_date timestamp with time zone not null default now(),
     user_login varchar(32) references _user(login) not null,
-    task_id char(8) references _task(id),
-    creator varchar(32) references _user(login),
+    task_id integer references _task(id),
+    comment_id integer references _comment(id),
+    creator_login varchar(32) references _user(login),
     body text,
-    type varchar(64) not null references dict_notify_type(name)
+    type varchar(64) not null references dict_notify_type(name),
+    checked boolean default false
 );
 
 create table _comment (
     id char(8) primary key default getnextid(),
     creation_date timestamp with time zone not null default now(),
-    author varchar(32) not null references _user(login),
-    task_id char(8) not null references _task(id),
+    author_login varchar(32) not null references _user(login),
+    task_id integer not null references _task(id),
     body text
 );
 
