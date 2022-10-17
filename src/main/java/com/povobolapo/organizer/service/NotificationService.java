@@ -129,7 +129,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void markNotificationsChecked(List<Integer> notificationIds) throws AuthenticationException {
+    public void markNotificationsChecked(List<String> notificationIds) throws AuthenticationException {
         log.debug("Marking notifications checked {}", notificationIds);
         List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
         if (notificationEntities.isEmpty()) {
@@ -143,7 +143,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteNotificationsByIds(List<Integer> notificationIds) throws AuthenticationException {
+    public void deleteNotificationsByIds(List<String> notificationIds) throws AuthenticationException {
         log.debug("Deleting notifications {}", notificationIds);
         List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
         if (notificationEntities.isEmpty()) {

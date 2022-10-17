@@ -57,16 +57,6 @@ public class NotificationEntity implements Serializable {
         this.body = body;
         this.type = type;
     }
-
-    public NotificationEntity(LocalDate creationDate, String userLogin,
-                              String taskId, String creatorLogin, String body, String type) {
-        this.creationDate = creationDate;
-        this.userLogin = userLogin;
-        this.taskId = taskId;
-        this.creatorLogin = creatorLogin;
-        this.body = body;
-        this.type = type;
-    }
     
     public NotificationEntity(UserEntity user, DictNotifyType notifyType) {
         this.user = user;

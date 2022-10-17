@@ -2,6 +2,7 @@ package com.povobolapo.organizer.controller.model;
 
 import com.povobolapo.organizer.model.UserEntity;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,20 +11,29 @@ public class UserRequestBody {
     @Size(max = 32)
     @NotNull
     private String login;
+
     @Size(max = 32)
     private String password;
+
+    @NotNull
+    @Email
+    @Size(max = 32)
+    private String mail;
+
     @Size(max = 64)
     private String name;
 
     private String avatar;
 
+
     public UserRequestBody() {
     }
 
-    public UserRequestBody(String login, String password, String name) {
+    public UserRequestBody(String login, String password, String mail, String name) {
         this.login = login;
         this.password = password;
         this.name = name;
+        this.mail = mail;
     }
 
     public String getLogin() {
@@ -58,10 +68,17 @@ public class UserRequestBody {
         this.avatar = avatar;
     }
 
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
     public UserEntity toUser() {
         UserEntity user = new UserEntity();
         user.setLogin(this.login);
-        user.setPassword(this.password);
         if (this.name == null || this.name.isBlank()) {
             user.setName(this.login);
         } else {

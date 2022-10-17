@@ -10,24 +10,17 @@ import com.povobolapo.organizer.utils.EventDispatcher;
 import com.povobolapo.organizer.utils.EventHandler;
 import com.povobolapo.organizer.utils.JwtTokenUtil;
 import org.apache.commons.lang3.StringUtils;
-import com.povobolapo.organizer.config.JwtTokenUtil;
 import com.povobolapo.organizer.controller.model.TaskRequestBody;
-import com.povobolapo.organizer.controller.model.UserRequestBody;
-import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.TaskEntity;
-import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.TaskService;
 import com.povobolapo.organizer.service.UserDetailsServiceImpl;
 import com.povobolapo.organizer.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,7 +76,7 @@ class OrganizerApplicationTests {
 	@Transactional
 	void testManageUser() throws AuthenticationException{
 		// Создаем юзера
-		UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "bombastik"));
+		UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik"));
 		assertTrue(StringUtils.isNotBlank(user.getId()));
 
 		// Делаем вид, что удалить пытается другой юзер
@@ -116,7 +109,7 @@ class OrganizerApplicationTests {
 		// Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
 		List<NotificationEntity> notifications = notificationService.getUserNotifications();
 		assert notifications != null && !notifications.isEmpty();
-		List<Integer> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
+		List<String> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
 		assert ids.size() == 1;
 
 		// Помечаем уведомление просмотренным и проверяем, что в бд оно обновилось

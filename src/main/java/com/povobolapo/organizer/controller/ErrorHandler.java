@@ -38,14 +38,14 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException exc) {
         log.warn("Handle NotFoundException: {}", exc.getMessage());
-        return new ErrorResponse(exc.getMessage(), exc);
+        return new ErrorResponse(exc.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleSpringValidException(MethodArgumentNotValidException exc) {
         log.warn("Handle MethodArgumentNotValidException (@Valid in controller): {}", exc.getMessage());
-        return new ErrorResponse("Some parameters didn't passed validation: " + exc.getMessage(), exc);
+        return new ErrorResponse("Some parameters didn't passed validation:" + exc.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
