@@ -40,14 +40,14 @@ public class TaskController {
 
     @GetMapping
     public TaskEntity getTaskById(
-            @RequestParam @Positive Integer id) {
+            @RequestParam @Positive String id) {
         log.debug("GET-request: getTaskById (id={})", id);
         return taskService.getTaskById(id);
     }
 
     @GetMapping("/info")
     public TaskInfoResponse getTaskInfoById(
-            @RequestParam @Positive Integer id) {
+            @RequestParam @Positive String id) {
         log.debug("GET-request: getTaskInfoById (id={})", id);
         return new TaskInfoResponse(taskService.getTaskById(id));
     }
@@ -66,7 +66,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/delete")
-    public boolean deleteTaskById(@RequestParam Integer id) {
+    public boolean deleteTaskById(@RequestParam String id) {
         log.debug("DELETE-request: deleteTaskById (id={})", id);
         return taskService.deleteTaskById(id);
     }

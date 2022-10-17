@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TaskStatusRepository extends JpaRepository<DictTaskStatus, Integer> {
+public interface TaskStatusRepository extends JpaRepository<DictTaskStatus, String> {
     DictTaskStatus findByName(String name);
 }

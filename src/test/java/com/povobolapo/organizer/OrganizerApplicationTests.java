@@ -9,6 +9,7 @@ import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.service.TaskService;
 import com.povobolapo.organizer.service.UserDetailsServiceImpl;
 import com.povobolapo.organizer.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ class OrganizerApplicationTests {
 	void testCreateUser() {
 		// Создаем юзера
 		UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "bombastik"));
-		assertTrue(user.getId() > 0);
+		assertTrue(StringUtils.isNotBlank(user.getId()));
 
 		// Делаем вид, что удалить пытается другой юзер
 		setSecurityContext("autotest_user");

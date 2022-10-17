@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -8,9 +10,10 @@ import java.time.LocalDate;
 @Table(name = "_notification")
 public class NotificationEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "_notification_id_seq")
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "creation_date")
     private LocalDate creationDate;
@@ -19,7 +22,7 @@ public class NotificationEntity implements Serializable {
     private String userLogin;
 
     @Column(name = "task_id")
-    private Integer taskId;
+    private String taskId;
 
     @Column(name = "creator")
     private String creatorLogin;
@@ -33,8 +36,8 @@ public class NotificationEntity implements Serializable {
     public NotificationEntity() {
     }
 
-    public NotificationEntity(Integer id, LocalDate creationDate, String userLogin,
-                              Integer taskId, String creatorLogin, String body, String type) {
+    public NotificationEntity(String id, LocalDate creationDate, String userLogin,
+                              String taskId, String creatorLogin, String body, String type) {
         this.id = id;
         this.creationDate = creationDate;
         this.userLogin = userLogin;
@@ -45,7 +48,7 @@ public class NotificationEntity implements Serializable {
     }
 
     public NotificationEntity(LocalDate creationDate, String userLogin,
-                              Integer taskId, String creatorLogin, String body, String type) {
+                              String taskId, String creatorLogin, String body, String type) {
         this.creationDate = creationDate;
         this.userLogin = userLogin;
         this.taskId = taskId;
@@ -54,11 +57,11 @@ public class NotificationEntity implements Serializable {
         this.type = type;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -78,11 +81,11 @@ public class NotificationEntity implements Serializable {
         this.userLogin = userLogin;
     }
 
-    public Integer getTaskId() {
+    public String getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Integer taskId) {
+    public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 

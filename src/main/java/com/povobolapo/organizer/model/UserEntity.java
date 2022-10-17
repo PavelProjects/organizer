@@ -1,5 +1,7 @@
 package com.povobolapo.organizer.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -7,9 +9,10 @@ import java.io.Serializable;
 @Table(name = "_user")
 public class UserEntity implements Serializable {
     @Id
-    @GeneratedValue(generator = "_user_id_seq")
+    @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
+    @GeneratedValue(generator = "entity_id")
     @Column(name = "id")
-    private Integer id;
+    private String id;
 
     @Column(name = "login", length = 32, nullable = false, unique = true)
     private String login;
@@ -27,7 +30,7 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(Integer id, String login, String password, String name, String avatar) {
+    public UserEntity(String id, String login, String password, String name, String avatar) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -52,11 +55,11 @@ public class UserEntity implements Serializable {
         this.login = login;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
