@@ -19,18 +19,18 @@
             <id>deploy-dir-defined</id>
             <activation>
                 <property>
-                    <name>env.DEPLOY_DIR</name>
+                    <name>env.TOMCAT_DEPLOY_DIR</name>
                 </property>
             </activation>
             <properties>
-                <tomcatDeployDir>${env.DEPLOY_DIR}</tomcatDeployDir>
+                <tomcatDeployDir>${env.TOMCAT_DEPLOY_DIR}</tomcatDeployDir>
             </properties>
         </profile>
         <profile>
             <id>deploy-dir-undefined</id>
             <activation>
                 <property>
-                    <name>!env.DEPLOY_DIR</name>
+                    <name>!env.TOMCAT_DEPLOY_DIR</name>
                 </property>
             </activation>
             <properties>
