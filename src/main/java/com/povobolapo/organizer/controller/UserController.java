@@ -36,11 +36,6 @@ public class UserController {
             log.error("Login is empty");
             throw new ValidationException("Login can't be empty!");
         }
-        try {
-            SpringContext.getBean(EventDispatcher.class).dispatch(new NotificationMessage(userService.getUserByLogin(login), "test", "test body"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         return new UserInfoResponse(userService.getUserByLogin(login));
     }
 
