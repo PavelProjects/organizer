@@ -5,7 +5,7 @@ import com.povobolapo.organizer.model.NotificationEntity;
 import java.time.LocalDate;
 
 public class NotificationResponse {
-    private int id;
+    private String id;
     private LocalDate creationDate;
     private UserInfoResponse user;
     private UserInfoResponse creator;
@@ -15,7 +15,7 @@ public class NotificationResponse {
     public NotificationResponse() {
     }
 
-    public NotificationResponse(int id, LocalDate creationDate,
+    public NotificationResponse(String id, LocalDate creationDate,
                                 UserInfoResponse user, UserInfoResponse creator,
                                 String body, boolean checked) {
         this.id = id;
@@ -40,11 +40,11 @@ public class NotificationResponse {
         }
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

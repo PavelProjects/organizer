@@ -14,6 +14,30 @@
     <name>organizer</name>
     <packaging>war</packaging>
 
+    <profiles>
+        <profile>
+            <id>deploy-dir-defined</id>
+            <activation>
+                <property>
+                    <name>env.TOMCAT_DEPLOY_DIR</name>
+                </property>
+            </activation>
+            <properties>
+                <tomcatDeployDir>${env.TOMCAT_DEPLOY_DIR}</tomcatDeployDir>
+            </properties>
+        </profile>
+        <profile>
+            <id>deploy-dir-undefined</id>
+            <activation>
+                <property>
+                    <name>!env.TOMCAT_DEPLOY_DIR</name>
+                </property>
+            </activation>
+            <properties>
+                <tomcatDeployDir></tomcatDeployDir>
+            </properties>
+        </profile>
+    </profiles>
 
     <properties>
         <java.version>11</java.version>
@@ -108,7 +132,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <outputDirectory>/home/pobopo/tomcat/webapps/</outputDirectory>
+                    <outputDirectory>${tomcatDeployDir}</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>

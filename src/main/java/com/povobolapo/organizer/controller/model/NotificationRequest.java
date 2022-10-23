@@ -3,20 +3,20 @@ package com.povobolapo.organizer.controller.model;
 import java.util.List;
 
 public class NotificationRequest {
-    private List<Integer> ids;
+    private List<String> ids;
 
     public NotificationRequest() {
     }
 
-    public NotificationRequest(List<Integer> ids) {
+    public NotificationRequest(List<String> ids) {
         this.ids = ids;
     }
 
-    public List<Integer> getIds() {
+    public List<String> getIds() {
         return ids;
     }
 
-    public void setIds(List<Integer> ids) {
+    public void setIds(List<String> ids) {
         this.ids = ids;
     }
 

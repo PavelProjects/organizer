@@ -2,8 +2,9 @@ package com.povobolapo.organizer.service;
 
 import java.util.ArrayList;
 
+import com.povobolapo.organizer.model.UserCreditsEntity;
 import com.povobolapo.organizer.model.UserEntity;
-import com.povobolapo.organizer.repository.UserRepository;
+import com.povobolapo.organizer.repository.UserCreditsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.User;
@@ -16,11 +17,11 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
+    private UserCreditsRepository userCreditsRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByLogin(username);
+        UserCreditsEntity user = userCreditsRepository.findByLogin(username);
         if (null != user) {
             return new User(user.getLogin(), user.getPassword(), new ArrayList<>());
         } else {

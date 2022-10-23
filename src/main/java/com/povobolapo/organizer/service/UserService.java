@@ -4,6 +4,8 @@ package com.povobolapo.organizer.service;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
+import com.povobolapo.organizer.model.UserCreditsEntity;
+import com.povobolapo.organizer.repository.UserCreditsRepository;
 import com.povobolapo.organizer.repository.UserRepository;
 import com.povobolapo.organizer.model.UserEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -26,14 +28,18 @@ import javax.validation.constraints.NotEmpty;
 @Component
 @Scope("singleton")
 public class UserService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserCreditsRepository userCreditsRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       UserCreditsRepository userCreditsRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.userCreditsRepository = userCreditsRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -44,16 +50,27 @@ public class UserService {
             log.info("User already exists, skipping creation");
             return user;
         }
+        // Сначала создаем приватные данные
+        createUserCredits(userBody);
+        // Далее публичные
+        user = userBody.toUser();
+        userRepository.save(user);
+        return user;
+    }
+
+    private void createUserCredits(UserRequestBody userBody) {
         // Валидация здесь, а не в объекте, тк RequestBody используется в методе апдейта,
         // где пароль может быть null
         if (StringUtils.isBlank(userBody.getPassword())) {
             throw new ValidationException("Password is missing!");
         }
 
-        user = userBody.toUser();
-        user.setPassword(encodePassword(userBody.getPassword()));
-        userRepository.save(user);
-        return user;
+        UserCreditsEntity userCreditsEntity = new UserCreditsEntity(
+                userBody.getLogin(),
+                encodePassword(userBody.getPassword()),
+                userBody.getMail()
+        );
+        userCreditsRepository.save(userCreditsEntity);
     }
 
     @Transactional
@@ -68,9 +85,6 @@ public class UserService {
             throw new NotFoundException("User with login [" + userBody.getLogin() + "] not found");
         }
 
-        if (StringUtils.isNotBlank(userBody.getPassword())) {
-            user.setPassword(encodePassword(userBody.getPassword()));
-        }
         if (StringUtils.isBlank(userBody.getName())) {
             user.setName(userBody.getName());
         }

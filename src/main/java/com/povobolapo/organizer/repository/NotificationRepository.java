@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<NotificationEntity, Integer> {
+public interface NotificationRepository extends JpaRepository<NotificationEntity, String> {
     List<NotificationEntity> findByUserLogin(String userLogin);
-    List<NotificationEntity> findByIdInAndUserLogin(List<Integer> id, String userLogin);
+    List<NotificationEntity> findByIdInAndUserLogin(List<String> id, String userLogin);
 
     @Query("select count(n) from NotificationEntity n where user_login = ?1")
     int countByUserLogin(String userLogin);

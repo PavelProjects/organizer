@@ -17,9 +17,6 @@ public class UserEntity implements Serializable {
     @Column(name = "login", length = 32, nullable = false, unique = true)
     private String login;
 
-    @Column(name = "password", length = 128, nullable = false)
-    private String password;
-
     @Column(name = "name", length = 64, nullable = false)
     private String name;
 
@@ -30,24 +27,21 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(String id, String login, String password, String name, String avatar) {
+    public UserEntity(String id, String login, String name, String avatar) {
         this.id = id;
         this.login = login;
-        this.password = password;
         this.name = name;
         this.avatar = avatar;
     }
 
-    public UserEntity(String login, String password, String name, String avatar) {
+    public UserEntity(String login, String name, String avatar) {
         this.login = login;
-        this.password = password;
         this.name = name;
         this.avatar = avatar;
     }
 
-    public UserEntity(String login, String password, String name) {
+    public UserEntity(String login, String name) {
         this.login = login;
-        this.password = password;
         this.name = name;
     }
 
@@ -71,14 +65,6 @@ public class UserEntity implements Serializable {
         this.login = login;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
     public String getName() {
         return name;
     }
@@ -100,7 +86,6 @@ public class UserEntity implements Serializable {
         return "UserEntity{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", avatar='" + avatar + '\'' +
                 '}';
