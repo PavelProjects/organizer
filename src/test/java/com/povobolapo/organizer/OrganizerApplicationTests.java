@@ -1,23 +1,21 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.service.*;
+import com.povobolapo.organizer.controller.model.TaskRequestBody;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.NotificationEntity;
+import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
+import com.povobolapo.organizer.service.NotificationService;
+import com.povobolapo.organizer.service.TaskService;
+import com.povobolapo.organizer.service.UserDetailsServiceImpl;
+import com.povobolapo.organizer.service.UserService;
 import com.povobolapo.organizer.utils.Event;
 import com.povobolapo.organizer.utils.EventDispatcher;
 import com.povobolapo.organizer.utils.EventHandler;
 import com.povobolapo.organizer.utils.JwtTokenUtil;
 import org.apache.commons.lang3.StringUtils;
-import com.povobolapo.organizer.controller.model.TaskRequestBody;
-import com.povobolapo.organizer.model.TaskEntity;
-import com.povobolapo.organizer.service.TaskService;
-import com.povobolapo.organizer.service.UserDetailsServiceImpl;
-import com.povobolapo.organizer.service.UserService;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
@@ -30,12 +28,10 @@ import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(classes = OrganizerApplication.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrganizerApplicationTests {
 	private static final String TEST_USER_LOGIN = "autotest_user_2";
 	private static final String AUTOTEST_LOGIN = "autotest_user";
