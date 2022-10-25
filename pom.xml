@@ -12,7 +12,12 @@
     <artifactId>organizer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>organizer</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>11</java.version>
+        <start-class>com.povobolapo.organizer.OrganizerApplication</start-class>
+    </properties>
 
     <profiles>
         <profile>
@@ -38,11 +43,6 @@
             </properties>
         </profile>
     </profiles>
-
-    <properties>
-        <java.version>11</java.version>
-        <start-class>com.povobolapo.organizer.OrganizerApplication</start-class>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -87,16 +87,13 @@
             <artifactId>postgresql</artifactId>
             <version>42.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.4.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
+<!--        С ним не стартуют тесты-->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter-engine</artifactId>-->
+<!--            <version>5.4.0</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
         <!--
          Для валидации по спрингу
          https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
@@ -129,11 +126,8 @@
         <finalName>organizer</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>${tomcatDeployDir}</outputDirectory>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.asciidoctor</groupId>
