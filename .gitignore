@@ -33,3 +33,4 @@ build/
 .vscode/
 /server_pass.txt
 /.idea/
+!/src/main/resources/application.properties
