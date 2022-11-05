@@ -3,37 +3,41 @@ package com.povobolapo.organizer.service;
 import com.povobolapo.organizer.controller.model.TaskRequestBody;
 import com.povobolapo.organizer.controller.model.TaskSearchRequest;
 import com.povobolapo.organizer.exception.NotFoundException;
-import com.povobolapo.organizer.repository.TaskRepository;
 import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
+import com.povobolapo.organizer.repository.TaskRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.commons.lang3.StringUtils;
 
+import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 
-@Component("taskServiceImpl")
+@Service
+@Scope("singleton")
 public class TaskService {
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
+
     private final TaskRepository taskRepository;
     private final TaskStatusService taskStatusService;
     private final UserService userService;
-    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
 
     @Autowired
     public TaskService(TaskRepository taskRepository, TaskStatusService taskStatusService, UserService userService) {
-        this.taskStatusService = taskStatusService;
         this.taskRepository = taskRepository;
+        this.taskStatusService = taskStatusService;
         this.userService = userService;
     }
 
@@ -54,27 +58,22 @@ public class TaskService {
 
     @Transactional
     public TaskEntity getTaskById(String id) {
-        Optional<TaskEntity> task = taskRepository.findById(id);
-        if (task.isEmpty()) {
-            log.warn("Task is NULL.");
-            throw new NotFoundException("Task with id [" + id + "] not found.");
-        }
-        return task.get();
+        return taskRepository.findById(id).get();
     }
 
     @Transactional
-    public TaskEntity createNewTask(String author, TaskRequestBody taskRequest) {
+    public TaskEntity createNewTask(TaskEntity task) throws AuthenticationException {
         DictTaskStatus status = taskStatusService.getTaskStatus("new");
-        UserEntity authorUser = userService.getUserByLogin(author);
-        TaskEntity task = taskRequest.toTask();
+        UserEntity authorUser = userService.getCurrentUser();
         task.setAuthor(authorUser);
-        task.setTaskStatus(status);
+        task.setDictTaskStatus(status);
         task.setCreationDate(new Date());
         return taskRepository.save(task);
     }
 
     //TODO авторизация, чтобы обновлял только автор/админ
     //TODO рефакторинг, надо унифицировать или упростить апдейт, чтобы обновлялись только notnull поля
+    // TODO @vola юзай UserService.getCurrentUser() для получения авторизованного юзера
     @Transactional
     public TaskEntity updateTask(TaskRequestBody taskRequest) {
         Optional<TaskEntity> baseTask = taskRepository.findById(taskRequest.getId());
@@ -88,7 +87,7 @@ public class TaskService {
         if (taskRequest.getStatus() != null) {
             log.debug("Searching for new status (name={})", taskRequest.getStatus());
             DictTaskStatus status = taskStatusService.getTaskStatus(taskRequest.getStatus());
-            if (status != null) baseTask.get().setTaskStatus(status);
+            if (status != null) baseTask.get().setDictTaskStatus(status);
         }
         if (taskRequest.getName() != null) {
             baseTask.get().setName(taskRequest.getName());

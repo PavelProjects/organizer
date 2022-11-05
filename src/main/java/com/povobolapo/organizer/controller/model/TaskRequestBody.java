@@ -1,12 +1,19 @@
 package com.povobolapo.organizer.controller.model;
 
-import com.povobolapo.organizer.model.DictTaskStatus;
-import com.povobolapo.organizer.model.TaskEntity;
-import com.povobolapo.organizer.model.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class TaskRequestBody {
 
     @Positive
@@ -26,9 +33,6 @@ public class TaskRequestBody {
 
     private Date deadline;
 
-    public TaskRequestBody() {
-    }
-
     public TaskRequestBody(String name, String description, String author) {
         this.name = name;
         this.description = description;
@@ -38,70 +42,5 @@ public class TaskRequestBody {
     public TaskRequestBody(String id, String description) {
         this.id = id;
         this.description = description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public TaskEntity toTask() {
-        TaskEntity task = new TaskEntity();
-        if (this.id != null) {
-            task.setId(this.id);
-        }
-        task.setName(this.name);
-        task.setAuthor(new UserEntity(this.author));
-        if (this.description != null) {
-            task.setDescription(this.description);
-        }
-        task.setTaskStatus(new DictTaskStatus("new"));
-        if (this.deadline != null) {
-            task.setDeadline(this.deadline);
-        }
-        return task;
     }
 }

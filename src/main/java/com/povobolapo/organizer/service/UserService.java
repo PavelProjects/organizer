@@ -5,9 +5,9 @@ import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.UserCreditsEntity;
+import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.repository.UserCreditsRepository;
 import com.povobolapo.organizer.repository.UserRepository;
-import com.povobolapo.organizer.model.UserEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,26 +18,24 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import javax.validation.constraints.NotEmpty;
 
 
-@Component
+@Service
 @Scope("singleton")
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     private final UserRepository userRepository;
     private final UserCreditsRepository userCreditsRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
     @Autowired
-    public UserService(UserRepository userRepository,
-                       UserCreditsRepository userCreditsRepository,
-                       PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserCreditsRepository userCreditsRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userCreditsRepository = userCreditsRepository;
         this.passwordEncoder = passwordEncoder;
@@ -111,24 +109,24 @@ public class UserService {
     }
 
     public UserEntity getUserByLogin(String login) {
-        UserEntity user = userRepository.findByLogin(login);
-        if (user == null) {
-            throw new NotFoundException("User with login [" + login + "] not found");
-        }
-        return user;
+        return userRepository.findByLogin(login);
     }
 
     // Проверяет, может ли текущий юзер менять юзера
     private boolean canUpdateUser(String userLoginToChange) throws AuthenticationException {
-        String currentUser = authenticatedUserName();
+        String currentUser = authenticatedUserLogin();
         log.warn(String.format("User %s trying to edit user %s", currentUser, userLoginToChange));
         return StringUtils.equals(userLoginToChange, currentUser);
+    }
+
+    public UserEntity getCurrentUser() throws AuthenticationException {
+        return getUserByLogin(authenticatedUserLogin());
     }
 
     // Гарантируется, что вернется не пустое значение
     @NonNull
     @NotEmpty
-    public String authenticatedUserName() throws AuthenticationException {
+    public String authenticatedUserLogin() throws AuthenticationException {
         // Получем из контекста безопасности какой юзер сейчас делает запрос
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         if (currentUser == null || StringUtils.isBlank(currentUser.getName())) {
