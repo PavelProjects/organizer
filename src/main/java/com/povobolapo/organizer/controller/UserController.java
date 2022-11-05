@@ -1,13 +1,10 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.UserInfoResponse;
+import com.povobolapo.organizer.controller.model.UserDto;
 import com.povobolapo.organizer.controller.model.UserRequestBody;
 import com.povobolapo.organizer.exception.ValidationException;
-import com.povobolapo.organizer.model.UserEntity;
+import com.povobolapo.organizer.mapper.UserMapper;
 import com.povobolapo.organizer.service.UserService;
-import com.povobolapo.organizer.utils.EventDispatcher;
-import com.povobolapo.organizer.websocket.SpringContext;
-import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +19,30 @@ import javax.validation.Valid;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
-    public UserInfoResponse getUserInfo(@RequestParam String login) throws ValidationException {
+    public UserDto getUserInfo(@RequestParam String login) throws ValidationException {
         log.debug("GET-request: getUserInfo (login={})", login);
         if (login == null || login.isEmpty()) {
             log.error("Login is empty");
             throw new ValidationException("Login can't be empty!");
         }
-        return new UserInfoResponse(userService.getUserByLogin(login));
+        return userMapper.toDto(userService.getUserByLogin(login));
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserInfoResponse createUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
+    public UserDto createUser(@Valid @RequestBody UserRequestBody user) throws ValidationException {
         log.debug("POST-request: createUser (user={})", user);
-        return new UserInfoResponse(userService.createUser(user));
+        return userMapper.toDto(userService.createUser(user));
     }
 
     @PutMapping("/update")

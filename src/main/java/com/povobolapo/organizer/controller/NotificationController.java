@@ -1,10 +1,10 @@
 package com.povobolapo.organizer.controller;
 
+import com.povobolapo.organizer.controller.model.NotificationDto;
 import com.povobolapo.organizer.controller.model.NotificationRequest;
-import com.povobolapo.organizer.controller.model.NotificationResponse;
+import com.povobolapo.organizer.mapper.NotificationMapper;
 import com.povobolapo.organizer.model.NotificationEntity;
 import com.povobolapo.organizer.service.NotificationService;
-import com.povobolapo.organizer.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +20,20 @@ import java.util.stream.Collectors;
 public class NotificationController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final NotificationService notificationService;
+    private final NotificationMapper notificationMapper;
 
     @Autowired
-    public NotificationController(NotificationService notificationService) {
+    public NotificationController(NotificationService notificationService, NotificationMapper notificationMapper) {
         this.notificationService = notificationService;
+        this.notificationMapper = notificationMapper;
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<NotificationResponse> getUserNotifications() throws AuthenticationException {
+    public List<NotificationDto> getUserNotifications() throws AuthenticationException {
         log.info("GET-request: getUserNotifications(})");
         List<NotificationEntity> notifications = notificationService.getUserNotifications();
-        return notifications.stream().map(NotificationResponse::new).collect(Collectors.toList());
+        return notifications.stream().map(notificationMapper::toDto).collect(Collectors.toList());
     }
 
     @PutMapping("/check")

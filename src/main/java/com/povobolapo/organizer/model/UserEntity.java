@@ -1,5 +1,9 @@
 package com.povobolapo.organizer.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -7,6 +11,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "_user")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -23,17 +31,6 @@ public class UserEntity implements Serializable {
     @Column(name = "avatar", length = 128)
     private String avatar;
 
-
-    public UserEntity() {
-    }
-
-    public UserEntity(String id, String login, String name, String avatar) {
-        this.id = id;
-        this.login = login;
-        this.name = name;
-        this.avatar = avatar;
-    }
-
     public UserEntity(String login, String name, String avatar) {
         this.login = login;
         this.name = name;
@@ -43,42 +40,6 @@ public class UserEntity implements Serializable {
     public UserEntity(String login, String name) {
         this.login = login;
         this.name = name;
-    }
-
-    public UserEntity(String login) {
-        this.login = login;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     @Override

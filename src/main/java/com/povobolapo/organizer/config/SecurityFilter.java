@@ -41,8 +41,6 @@ public class SecurityFilter extends OncePerRequestFilter {
                             .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
-            } else {
-                log.warn("Token does not begin with Bearer string!");
             }
         } else {
             log.warn("Security context is already present");

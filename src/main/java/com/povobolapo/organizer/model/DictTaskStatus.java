@@ -1,6 +1,10 @@
 package com.povobolapo.organizer.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +14,10 @@ import static com.povobolapo.organizer.model.DictTaskStatus.NAME;
 
 @Entity
 @Table(name = NAME)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class DictTaskStatus implements Serializable {
     public static final String NAME = "dict_task_status";
     @Id
@@ -21,35 +29,4 @@ public class DictTaskStatus implements Serializable {
     private String name;
     @Column(name = "caption")
     private String caption;
-
-    public DictTaskStatus() {
-    }
-
-    public DictTaskStatus(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
 }

@@ -1,11 +1,10 @@
 package com.povobolapo.organizer.service;
 
-import com.povobolapo.organizer.websocket.model.NotificationMessage;
-import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.*;
 import com.povobolapo.organizer.repository.NotificationRepository;
 import com.povobolapo.organizer.repository.NotifyTypeRepository;
 import com.povobolapo.organizer.utils.EventDispatcher;
+import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +44,16 @@ public class NotificationService {
     }
 
     public List<NotificationEntity> getUserNotifications() throws AuthenticationException {
-        return notificationRepository.findByUserLogin(userService.authenticatedUserName());
+        return notificationRepository.findByUserLogin(userService.authenticatedUserLogin());
     }
 
     // Метод для создания системных уведмолений
     // Например - обновите приложение, потеряна связь и т.п.
     @Transactional
-    public void createSystemNotification(String toUser, String body) {
-        checkNotificationCount(toUser);
-        log.debug("Creating new system notification for user {}", toUser);
-        NotificationEntity notificationEntity = createBasicNotification(toUser, NotifyTypes.SYSTEM.getName());
+    public void createSystemNotification(UserEntity userEntity, String body) {
+        checkNotificationCount(userEntity.getLogin());
+        log.debug("Creating new system notification for user {}", userEntity);
+        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.SYSTEM.getName());
         notificationEntity.setBody(body);
         notificationRepository.save(notificationEntity);
         log.debug("System notification created");
@@ -68,10 +67,10 @@ public class NotificationService {
 
     // Метод создания уведомлений для комментариев
     @Transactional
-    public void createCommentNotification(String toUser, CommentEntity comment) {
-        checkNotificationCount(toUser);
-        log.debug("Creating new comment notification for user {} for comment {}", toUser, comment);
-        NotificationEntity notificationEntity = createBasicNotification(toUser, NotifyTypes.COMMENT.getName());
+    public void createCommentNotification(UserEntity userEntity, CommentEntity comment) {
+        checkNotificationCount(userEntity.getLogin());
+        log.debug("Creating new comment notification for user {} for comment {}", userEntity, comment);
+        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.COMMENT.getName());
         notificationEntity.setBody(comment.getBody());
         notificationEntity.setCreator(comment.getAuthor());
         notificationRepository.save(notificationEntity);
@@ -87,10 +86,10 @@ public class NotificationService {
     // Метод создания уведомлений для тасок
     // Например таска создана, таска обновлена
     @Transactional
-    public void createTaskNotification(String toUser, TaskEntity task) {
-        checkNotificationCount(toUser);
-        log.debug("Creating new task notification for user {} for task {}", toUser, task);
-        NotificationEntity notificationEntity = createBasicNotification(toUser, NotifyTypes.TASK.getName());
+    public void createTaskNotification(UserEntity userEntity, TaskEntity task) {
+        checkNotificationCount(userEntity.getLogin());
+        log.debug("Creating new task notification for user {} for task {}", userEntity, task);
+        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.TASK.getName());
         notificationEntity.setBody(getTaskNotificationBody(task));
         notificationEntity.setCreator(task.getAuthor());
         notificationRepository.save(notificationEntity);
@@ -131,7 +130,7 @@ public class NotificationService {
     @Transactional
     public void markNotificationsChecked(List<String> notificationIds) throws AuthenticationException {
         log.debug("Marking notifications checked {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserLogin());
         if (notificationEntities.isEmpty()) {
             log.warn("No notification were found");
             return;
@@ -145,7 +144,7 @@ public class NotificationService {
     @Transactional
     public void deleteNotificationsByIds(List<String> notificationIds) throws AuthenticationException {
         log.debug("Deleting notifications {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserName());
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserLogin());
         if (notificationEntities.isEmpty()) {
             log.debug("No notification were found");
             return;
@@ -155,7 +154,7 @@ public class NotificationService {
 
     @Transactional
     public void deleteNotifications(List<NotificationEntity> notificationEntities) throws AuthenticationException{
-        String currentUser = userService.authenticatedUserName();
+        String currentUser = userService.authenticatedUserLogin();
         List<NotificationEntity> toDelete = notificationEntities.stream()
                 .filter(notificationEntity -> StringUtils.equals(notificationEntity.getUser().getLogin(), currentUser)).collect(Collectors.toList());
         if (toDelete.isEmpty()) {
@@ -169,18 +168,12 @@ public class NotificationService {
 
     private String getTaskNotificationBody(TaskEntity task) {
         return String.format("Задача [%s] - [%s] была изменена",
-                task.getName(), task.getTaskStatus().getCaption());
+                task.getName(), task.getDictTaskStatus().getCaption());
     }
 
-    private NotificationEntity createBasicNotification(String toUser, String type) {
+    private NotificationEntity createBasicNotification(UserEntity userEntity, String type) {
         DictNotifyType notifyType = notifyTypeRepository.findByName(type);
         Objects.requireNonNull(notifyType);
-
-        UserEntity userEntity = userService.getUserByLogin(toUser);
-        if (userEntity == null) {
-            throw new NotFoundException("Can't find user with login " + toUser);
-        }
-
         return new NotificationEntity(userEntity, notifyType);
     }
 

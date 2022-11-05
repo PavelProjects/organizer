@@ -1,5 +1,9 @@
 package com.povobolapo.organizer.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,6 +13,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "_task")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class TaskEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -36,73 +44,9 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "author", referencedColumnName = "login")
     private UserEntity author;
 
-    public TaskEntity() {
-    }
-
-    public TaskEntity(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    public TaskEntity(DictTaskStatus dictTaskStatus, UserEntity author) {
-        this.dictTaskStatus = dictTaskStatus;
+    public TaskEntity(DictTaskStatus status, UserEntity author) {
+        this.dictTaskStatus = status;
         this.author = author;
-    }
-
-    public UserEntity getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(UserEntity author) {
-        this.author = author;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public DictTaskStatus getTaskStatus() {
-        return dictTaskStatus;
-    }
-
-    public void setTaskStatus(DictTaskStatus dictTaskStatus) {
-        this.dictTaskStatus = dictTaskStatus;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
     }
 
     @Override
