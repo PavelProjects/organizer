@@ -9,6 +9,7 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring", uses ={UserMapper.class})
 public interface TaskMapper {
+    // Передаем на фронт только caption значение статуса
     @Mappings({
             @Mapping(target = "status", source = "dictTaskStatus.caption"),
     })

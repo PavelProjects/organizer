@@ -4,7 +4,6 @@ import com.povobolapo.organizer.utils.JwtTokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.naming.AuthenticationException;
@@ -13,7 +12,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 @ServerEndpoint(
@@ -22,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
         decoders = MessageDecoder.class)
 public class NotificationWsController {
     private static final Logger log = LoggerFactory.getLogger(NotificationWsController.class);
-    private final ConcurrentHashMap<String, Session> activeSessions = new ConcurrentHashMap<>();
 
     // Через Autowired spring тянуть не хочет
     private final JwtTokenUtil jwtTokenUtil = SpringContext.getBean(JwtTokenUtil.class);

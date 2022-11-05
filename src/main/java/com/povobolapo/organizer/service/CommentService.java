@@ -52,6 +52,8 @@ public class CommentService {
     private void createNotification(CommentEntity comment) {
         // TODO рассылка уведомления участникам задачи
         // реализовать после реализации исполнителей задачи
+        // Тестовая реализация
+        notificationService.createCommentNotification(comment.getAuthor(), comment);
     }
 
     public List<CommentEntity> getTaskComments(String taskId) {
@@ -70,6 +72,7 @@ public class CommentService {
         if (comment.isEmpty()) {
             throw new NotFoundException("Can't found comment by id " + commentDto.getId());
         }
+        // Только автор может редактировать свой комментарий
         if (!canManageComment(comment.get())) {
             throw new AccessDeniedException("You can't edit this comment!");
         }
@@ -87,6 +90,7 @@ public class CommentService {
         if (comment.isEmpty()) {
             throw new NotFoundException("Can't found comment by id " + commentId);
         }
+        // Только автор может редактировать свой комментарий
         if (!canManageComment(comment.get())) {
             throw new AccessDeniedException("You can't delete this comment!");
         }
