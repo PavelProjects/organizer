@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.service;
 
-import com.povobolapo.organizer.controller.model.TaskRequestBody;
-import com.povobolapo.organizer.controller.model.TaskSearchRequest;
+import com.povobolapo.organizer.controller.model.task.TaskRequestBody;
+import com.povobolapo.organizer.controller.model.task.TaskSearchRequest;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;

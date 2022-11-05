@@ -1,8 +1,8 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.TaskDto;
-import com.povobolapo.organizer.controller.model.TaskRequestBody;
-import com.povobolapo.organizer.controller.model.TaskSearchRequest;
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.task.TaskRequestBody;
+import com.povobolapo.organizer.controller.model.task.TaskSearchRequest;
 import com.povobolapo.organizer.mapper.TaskMapper;
 import com.povobolapo.organizer.service.TaskService;
 import org.slf4j.Logger;

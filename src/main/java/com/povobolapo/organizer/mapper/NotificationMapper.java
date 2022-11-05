@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.mapper;
 
-import com.povobolapo.organizer.controller.model.NotificationDto;
+import com.povobolapo.organizer.controller.model.notification.NotificationDto;
 import com.povobolapo.organizer.model.NotificationEntity;
 import org.mapstruct.Mapper;
 

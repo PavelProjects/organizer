@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.mapper;
 
-import com.povobolapo.organizer.controller.model.TaskDto;
-import com.povobolapo.organizer.controller.model.TaskRequestBody;
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.task.TaskRequestBody;
 import com.povobolapo.organizer.model.TaskEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

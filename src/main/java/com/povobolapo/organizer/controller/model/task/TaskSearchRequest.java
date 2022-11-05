@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.controller.model;
+package com.povobolapo.organizer.controller.model.task;
 
 public class TaskSearchRequest {
     private int page = 0;

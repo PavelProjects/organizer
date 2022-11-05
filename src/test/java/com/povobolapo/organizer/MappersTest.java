@@ -1,9 +1,9 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.controller.model.CommentDto;
-import com.povobolapo.organizer.controller.model.NotificationDto;
-import com.povobolapo.organizer.controller.model.TaskDto;
-import com.povobolapo.organizer.controller.model.UserDto;
+import com.povobolapo.organizer.controller.model.comment.CommentDto;
+import com.povobolapo.organizer.controller.model.notification.NotificationDto;
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.user.UserDto;
 import com.povobolapo.organizer.mapper.CommentMapper;
 import com.povobolapo.organizer.mapper.NotificationMapper;
 import com.povobolapo.organizer.mapper.TaskMapper;

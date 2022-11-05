@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.controller.model;
+package com.povobolapo.organizer.controller.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

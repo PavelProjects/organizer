@@ -1,6 +1,6 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.controller.model.user.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.NotificationEntity;
 import com.povobolapo.organizer.model.UserEntity;

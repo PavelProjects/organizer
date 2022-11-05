@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.mapper;
 
-import com.povobolapo.organizer.controller.model.UserDto;
+import com.povobolapo.organizer.controller.model.user.UserDto;
 import com.povobolapo.organizer.model.UserEntity;
 import org.mapstruct.Mapper;
 
