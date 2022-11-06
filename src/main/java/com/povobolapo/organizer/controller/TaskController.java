@@ -57,7 +57,7 @@ public class TaskController {
     @Validated(OnCreate.class)
     public TaskDto createTask(@RequestBody @Valid TaskRequestBody task) throws AuthenticationException {
         log.debug("POST-request: createTask: {}", task);
-        return taskMapper.toDto(taskService.create(taskMapper.toEntity(task), task.getParticipants()));
+        return taskMapper.toDto(taskService.create(task));
     }
 
     @PutMapping("/update")

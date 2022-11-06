@@ -1,5 +1,11 @@
 package com.povobolapo.organizer.controller.model.task;
 
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
 public class TaskSearchRequest {
     private int page = 0;
     private int size = 10;
@@ -7,6 +13,7 @@ public class TaskSearchRequest {
     private String sortBy = "id";
     private String login = null;
     private String status = null;
+    private Set<String> participants = new HashSet<>();
 
     public TaskSearchRequest() {
     }
@@ -24,64 +31,5 @@ public class TaskSearchRequest {
         this.sort = sort;
         this.login = login;
         this.status = status;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
-
-    public String getSortBy() {
-        return sortBy;
-    }
-
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "TaskSearchRequest{" +
-                "page=" + page +
-                ", size=" + size +
-                ", sort='" + sort + '\'' +
-                ", login='" + login + '\'' +
-                ", status='" + status + '\'' +
-                '}';
     }
 }

@@ -3,6 +3,7 @@ package com.povobolapo.organizer.service;
 import com.povobolapo.organizer.controller.model.task.TaskRequestBody;
 import com.povobolapo.organizer.controller.model.task.TaskSearchRequest;
 import com.povobolapo.organizer.exception.NotFoundException;
+import com.povobolapo.organizer.mapper.TaskMapper;
 import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
@@ -35,13 +36,15 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskStatusService taskStatusService;
     private final UserService userService;
+    private final TaskMapper taskMapper;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, TaskStatusService taskStatusService,
-                       UserService userService) {
+                       UserService userService, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
         this.taskStatusService = taskStatusService;
         this.userService = userService;
+        this.taskMapper = taskMapper;
     }
 
     @Transactional
@@ -65,17 +68,22 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskEntity create(TaskEntity task, Set<String> participants) throws AuthenticationException {
+    public TaskEntity create(TaskRequestBody taskRequest) throws AuthenticationException {
         UserEntity authorUser = userService.getCurrentUser();
+        TaskEntity task = taskMapper.toEntity(taskRequest);
         task.setAuthor(authorUser);
         log.debug("Task in service: {}", task);
+        DictTaskStatus status;
         if (task.getDictTaskStatus() == null) {
-            DictTaskStatus status = taskStatusService.getTaskStatus("new");
-            task.setDictTaskStatus(status);
+            status = taskStatusService.getTaskStatus("new");
+        } else {
+            status = taskStatusService.getTaskStatus(taskRequest.getStatus());
         }
+        task.setDictTaskStatus(status);
         task.setCreationDate(new Date());
-        if (participants != null) {
-            Set<UserEntity> party = participants.stream().map(userService::getUserByLogin).collect(Collectors.toSet());
+        if (!taskRequest.getParticipants().isEmpty()) {
+            Set<UserEntity> party = taskRequest.getParticipants().stream()
+                    .map(userService::getUserByLogin).collect(Collectors.toSet());
             task.setParticipants(party);
         }
         return taskRepository.save(task);
@@ -112,14 +120,19 @@ public class TaskService {
     private Example<TaskEntity> createExampleForSearch(TaskSearchRequest request) {
         DictTaskStatus status = null;
         UserEntity author = null;
+        Set<UserEntity> participants = null; //TODO это пока не работает
         if (!StringUtils.isEmpty(request.getStatus())) {
             status = taskStatusService.getTaskStatus(request.getStatus());
         }
         if (!StringUtils.isEmpty(request.getLogin())) {
             author = userService.getUserByLogin(request.getLogin());
         }
-        log.debug("Create example<> with status={}, author={}", status, author);
-        return Example.of(new TaskEntity(status, author));
+        if (!request.getParticipants().isEmpty()) {
+            participants = request.getParticipants().stream()
+                    .map(userService::getUserByLogin).collect(Collectors.toSet());
+        }
+        log.debug("Create example<> with status={}, author={}, party={}", status, author, participants);
+        return Example.of(new TaskEntity(status, author, participants));
     }
 
     //TODO надо подумать, как улучшить это
