@@ -5,10 +5,9 @@ import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.jsonwebtoken.MalformedJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,13 +17,37 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.naming.AuthenticationException;
 import java.util.Locale;
 
+@Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
-
     static{
         Locale.setDefault(new Locale("en"));
+    }
+
+    //TODO настроить отлов ошибок spring security
+    //https://www.baeldung.com/spring-security-exceptionhandler
+    //https://www.baeldung.com/spring-security-exceptions
+    //https://stackoverflow.com/questions/64015805/how-to-properly-handle-jwtexception
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Token expired");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse badToken(MalformedJwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Bad token");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse wrongToken(JwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Wrong token");
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -60,19 +83,5 @@ public class ErrorHandler {
     public ErrorResponse authException(AuthenticationException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Current user not authenticated");
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Token expired");
-    }
-
-    @ExceptionHandler(JwtException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse wrongToken(JwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Wrong token");
     }
 }
