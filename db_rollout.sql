@@ -1,6 +1,7 @@
 begin;
 
-drop table _user, _user_credits, _comment, _notification, _task, _user_task, dict_notify_type, dict_task_status;
+drop table _user, _user_credits, _comment, _notification, _task, _user_task,
+    dict_notify_type, dict_task_status, _participants;
 drop sequence main_id_sequence;
 drop function getnextid;
 
@@ -88,13 +89,20 @@ create table _user_task (
     task_id char(8) not null references _task(id)
 );
 
+create table _participants (
+    task_id char(8) not null references _task(id),
+    user_login varchar(32) not null references _user(login)
+);
+
 insert into dict_notify_type (name, caption) values
     ('system', 'Система'),
      ('comment', 'Комментарий'),
      ('task', 'Задача');
 
-insert into dict_task_status (name, caption) values ('new', 'New task');
-insert into _user_credits values (getnextid(), 'autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'jopa@mail.ru');
+insert into dict_task_status (name, caption) values ('new', 'New'), ('doing', 'In progress'), ('done', 'Complete');
+insert into _user_credits values (getnextid(),
+                                  'autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6',
+                                  'jopa@mail.ru');
 insert into _user (login, name) values ('autotest_user', 'main buddy');
 
 commit;
