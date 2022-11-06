@@ -1,9 +1,6 @@
 package com.povobolapo.organizer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class UserEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -40,15 +38,5 @@ public class UserEntity implements Serializable {
     public UserEntity(String login, String name) {
         this.login = login;
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", name='" + name + '\'' +
-                ", avatar='" + avatar + '\'' +
-                '}';
     }
 }

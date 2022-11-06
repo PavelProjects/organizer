@@ -23,6 +23,8 @@ import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,7 +37,8 @@ public class TaskService {
     private final UserService userService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskStatusService taskStatusService, UserService userService) {
+    public TaskService(TaskRepository taskRepository, TaskStatusService taskStatusService,
+                       UserService userService) {
         this.taskRepository = taskRepository;
         this.taskStatusService = taskStatusService;
         this.userService = userService;
@@ -62,37 +65,36 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskEntity createNewTask(TaskEntity task) throws AuthenticationException {
-        DictTaskStatus status = taskStatusService.getTaskStatus("new");
+    public TaskEntity create(TaskEntity task, Set<String> participants) throws AuthenticationException {
         UserEntity authorUser = userService.getCurrentUser();
         task.setAuthor(authorUser);
-        task.setDictTaskStatus(status);
+        log.debug("Task in service: {}", task);
+        if (task.getDictTaskStatus() == null) {
+            DictTaskStatus status = taskStatusService.getTaskStatus("new");
+            task.setDictTaskStatus(status);
+        }
         task.setCreationDate(new Date());
+        if (participants != null) {
+            Set<UserEntity> party = participants.stream().map(userService::getUserByLogin).collect(Collectors.toSet());
+            task.setParticipants(party);
+        }
         return taskRepository.save(task);
     }
 
     //TODO авторизация, чтобы обновлял только автор/админ
     //TODO рефакторинг, надо унифицировать или упростить апдейт, чтобы обновлялись только notnull поля
-    // TODO @vola юзай UserService.getCurrentUser() для получения авторизованного юзера
+    //TODO @vola юзай UserService.getCurrentUser() для получения авторизованного юзера
+    // @poeblo спасибо!!!!!!!!!!!!
     @Transactional
-    public TaskEntity updateTask(TaskRequestBody taskRequest) {
+    public TaskEntity update(TaskRequestBody taskRequest) {
         Optional<TaskEntity> baseTask = taskRepository.findById(taskRequest.getId());
         if (baseTask.isEmpty()) {
             log.warn("Task is NULL, update stopped.");
             throw new NotFoundException("Task with id [" + taskRequest.getId() + "] not found.");
         }
         log.debug("Found task (id={}).", taskRequest.getId());
-        baseTask.get().setDescription(taskRequest.getDescription());
-        baseTask.get().setDeadline(taskRequest.getDeadline());
-        if (taskRequest.getStatus() != null) {
-            log.debug("Searching for new status (name={})", taskRequest.getStatus());
-            DictTaskStatus status = taskStatusService.getTaskStatus(taskRequest.getStatus());
-            if (status != null) baseTask.get().setDictTaskStatus(status);
-        }
-        if (taskRequest.getName() != null) {
-            baseTask.get().setName(taskRequest.getName());
-        }
-        return taskRepository.save(baseTask.get());
+        TaskEntity newTask = updateTask(taskRequest, baseTask.get());
+        return taskRepository.save(newTask);
     }
 
     @Transactional
@@ -118,5 +120,30 @@ public class TaskService {
         }
         log.debug("Create example<> with status={}, author={}", status, author);
         return Example.of(new TaskEntity(status, author));
+    }
+
+    //TODO надо подумать, как улучшить это
+    private TaskEntity updateTask(TaskRequestBody taskRequest, TaskEntity task) {
+        if (taskRequest.getName() != null) {
+            task.setName(taskRequest.getName());
+        }
+        if (taskRequest.getDescription() != null) {
+            task.setDescription(taskRequest.getDescription());
+        }
+        if (taskRequest.getStatus() != null) {
+            log.debug("Searching for new status (name={})", taskRequest.getStatus());
+            DictTaskStatus status = taskStatusService.getTaskStatus(taskRequest.getStatus());
+            if (status != null) task.setDictTaskStatus(status);
+            log.debug("New status: {}", status);
+        }
+        if (taskRequest.getDeadline() != null) {
+            task.setDeadline(taskRequest.getDeadline());
+        }
+        if (!taskRequest.getParticipants().isEmpty()) {
+            Set<UserEntity> party = taskRequest.getParticipants().stream()
+                    .map(userService::getUserByLogin).collect(Collectors.toSet());
+            task.setParticipants(party);
+        }
+        return task;
     }
 }
