@@ -8,15 +8,15 @@ import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.repository.TaskRepository;
-import org.apache.commons.lang3.StringUtils;
+import com.povobolapo.organizer.utils.TaskSpecifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 
 @Service
@@ -54,10 +56,9 @@ public class TaskService {
         // Дефолтные значения: страница 0, размер 10, сортировка ASC по столбцу id.
         PageRequest pagesRequest = PageRequest.of(request.getPage(), request.getSize(),
                 Sort.by(Sort.Direction.fromString(request.getSort()), request.getSortBy()));
-        //Тут собирается пример запроса, если требуется сортировка по автору и/или статусу
-        Example<TaskEntity> example = createExampleForSearch(request);
-        //Получаем страницу из БД
-        Page<TaskEntity> found = taskRepository.findAll(example, pagesRequest);
+
+        Specification<TaskEntity> spec = createSpecForSearch(request);
+        Page<TaskEntity> found = taskRepository.findAll(spec, pagesRequest);
         log.debug("Found next values: " + found.getContent());
         return found.getContent();
     }
@@ -117,22 +118,18 @@ public class TaskService {
         return true;
     }
 
-    private Example<TaskEntity> createExampleForSearch(TaskSearchRequest request) {
-        DictTaskStatus status = null;
-        UserEntity author = null;
-        Set<UserEntity> participants = null; //TODO это пока не работает
-        if (!StringUtils.isEmpty(request.getStatus())) {
-            status = taskStatusService.getTaskStatus(request.getStatus());
+    private Specification<TaskEntity> createSpecForSearch(TaskSearchRequest request) {
+        Specification<TaskEntity> spec = where(null);
+        if (request.getLogin() != null) {
+            spec = spec.and(TaskSpecifications.hasLogin(request.getLogin()));
         }
-        if (!StringUtils.isEmpty(request.getLogin())) {
-            author = userService.getUserByLogin(request.getLogin());
+        if (request.getStatus() != null) {
+            spec = spec.and(TaskSpecifications.hasStatus(request.getStatus()));
         }
         if (!request.getParticipants().isEmpty()) {
-            participants = request.getParticipants().stream()
-                    .map(userService::getUserByLogin).collect(Collectors.toSet());
+            spec = spec.and(TaskSpecifications.hasParticipants(request.getParticipants()));
         }
-        log.debug("Create example<> with status={}, author={}, party={}", status, author, participants);
-        return Example.of(new TaskEntity(status, author, participants));
+        return spec;
     }
 
     //TODO надо подумать, как улучшить это
