@@ -19,6 +19,7 @@ public class TaskSpecifications {
 
     public static Specification<TaskEntity> hasParticipants(Set<String> logins) {
         return (root, query, cb) -> {
+            query.distinct(true);
             SetJoin<TaskEntity, UserEntity> participants = root.joinSet("participants");
             return participants.get("login").in(logins);
         };
