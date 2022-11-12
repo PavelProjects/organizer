@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 @Service
@@ -119,6 +120,7 @@ public class UserService {
         return StringUtils.equals(userLoginToChange, currentUser);
     }
 
+    @NotNull
     public UserEntity getCurrentUser() throws AuthenticationException {
         return getUserByLogin(authenticatedUserLogin());
     }

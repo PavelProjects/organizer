@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = OrganizerApplication.class)
-class OrganizerApplicationTests {
+class OrganizerApplicationTestsIT {
     private static final String TEST_USER_LOGIN = "autotest_user_2";
     private static final String AUTOTEST_LOGIN = "autotest_user";
 
@@ -171,7 +171,7 @@ class OrganizerApplicationTests {
         try {
             eventDispatcher.dispatch(new DummyEvent());
         } catch (Exception ex) {
-            assert ((RuntimeException) ex).getMessage().equals("yeah");
+            assert ex.getMessage().equals("yeah");
         }
     }
 
