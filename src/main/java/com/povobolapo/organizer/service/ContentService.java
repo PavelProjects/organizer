@@ -10,18 +10,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@Scope("singleton")
 public class ContentService {
     private static final Logger log = LoggerFactory.getLogger(ContentService.class);
 
@@ -46,23 +45,22 @@ public class ContentService {
     @Transactional
     public ContentInfoEntity createContent(String fileName, String fileExtension, byte[] content) throws AuthenticationException, IOException {
         ContentEntity contentEntity = creteOrGetContent(content);
-        ContentInfoEntity contentInfoEntity = contentInfoRepository.findByFileNameAndFileExtension(fileName, fileExtension);
-        if (contentInfoEntity == null) {
-            contentInfoEntity = new ContentInfoEntity();
-        }
 
         UserEntity user = userService.getCurrentUser();
-        contentInfoEntity.setContent(contentEntity);
-        contentInfoEntity.setOwner(user);
-        contentInfoEntity.setFileName(fixFileName(fileName));
-        contentInfoEntity.setFileExtension(fileExtension);
+        ContentInfoEntity contentInfoEntity =
+                new ContentInfoEntity(fixFileName(fileName), fileExtension, contentEntity, user);
         contentInfoRepository.save(contentInfoEntity);
 
         return contentInfoEntity;
     }
 
-    public ContentInfoEntity getContent(String contentInfoId) {
+    public ContentInfoEntity getContentByContentInfoId(String contentInfoId) {
         return contentInfoRepository.findById(contentInfoId).get();
+    }
+
+    public byte[] getContentData(ContentInfoEntity contentInfoEntity) throws IOException {
+        Objects.requireNonNull(contentInfoEntity);
+        return storageService.get(contentInfoEntity.getContent().getId());
     }
 
     @Transactional

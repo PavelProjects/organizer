@@ -1,6 +1,8 @@
 package com.povobolapo.organizer.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +12,8 @@ import java.util.Date;
 @Entity
 @Table(name = "_content")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ContentEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -22,4 +26,9 @@ public class ContentEntity implements Serializable {
 
     @Column(name = "hash_code")
     private int hashCode;
+
+    public ContentEntity(Date creationDate, int hashCode) {
+        this.creationDate = creationDate;
+        this.hashCode = hashCode;
+    }
 }

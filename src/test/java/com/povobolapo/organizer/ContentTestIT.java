@@ -52,7 +52,7 @@ public class ContentTestIT {
             assert contentInfoEntity.getFileExtension().equals(splitName[1]);
             assert contentInfoEntity.getContent() != null;
 
-            assert contentService.getContent(contentInfoEntity.getId()) != null;
+            assert contentService.getContentByContentInfoId(contentInfoEntity.getId()) != null;
 
             contentService.deleteContent(contentInfoEntity.getId());
         } catch (AuthenticationException e) {

@@ -2,13 +2,13 @@ package com.povobolapo.organizer.controller;
 
 import com.povobolapo.organizer.controller.model.ErrorResponse;
 import com.povobolapo.organizer.exception.NotFoundException;
+import com.povobolapo.organizer.exception.StorageException;
 import com.povobolapo.organizer.exception.ValidationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.naming.AuthenticationException;
+import java.io.IOException;
 import java.util.Locale;
 
 @RestControllerAdvice
@@ -74,5 +75,19 @@ public class ErrorHandler {
     public ErrorResponse wrongToken(JwtException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Wrong token");
+    }
+
+    @ExceptionHandler(StorageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse storageException(StorageException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse(exc.getMessage());
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse ioException(IOException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse(exc.getMessage(), exc);
     }
 }

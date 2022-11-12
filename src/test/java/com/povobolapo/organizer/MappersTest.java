@@ -1,13 +1,7 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.controller.model.CommentDto;
-import com.povobolapo.organizer.controller.model.NotificationDto;
-import com.povobolapo.organizer.controller.model.TaskDto;
-import com.povobolapo.organizer.controller.model.UserDto;
-import com.povobolapo.organizer.mapper.CommentMapper;
-import com.povobolapo.organizer.mapper.NotificationMapper;
-import com.povobolapo.organizer.mapper.TaskMapper;
-import com.povobolapo.organizer.mapper.UserMapper;
+import com.povobolapo.organizer.controller.model.*;
+import com.povobolapo.organizer.mapper.*;
 import com.povobolapo.organizer.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +19,8 @@ public class MappersTest {
     private CommentMapper commentMapper;
     @Autowired
     private NotificationMapper notificationMapper;
+    @Autowired
+    private ContentInfoMapper contentInfoMapper;
 
     private final UserEntity userEntity = new UserEntity("id", "name", "login", "avatar");
     private final TaskEntity task = new TaskEntity(
@@ -107,5 +103,21 @@ public class MappersTest {
         assert  dto.getUser().getLogin().equals(notificationEntity.getUser().getLogin());
         assert  dto.getCreator().getLogin().equals(notificationEntity.getCreator().getLogin());
         assert  dto.getCreationDate().equals(notificationEntity.getCreationDate());
+    }
+
+    @Test
+    public void content() {
+        ContentEntity content = new ContentEntity(new Date(), 123);
+        content.setId("123");
+        ContentInfoEntity contentInfoEntity = new ContentInfoEntity("test", "png", content, userEntity);
+        contentInfoEntity.setId("123");
+
+        ContentDto dto = contentInfoMapper.toDto(contentInfoEntity);
+
+        assert dto.getContentInfoId().equals(contentInfoEntity.getId());
+        assert dto.getContentId().equals(content.getId());
+        assert dto.getOwner().getLogin().equals(userEntity.getLogin());
+        assert dto.getFileName().equals(contentInfoEntity.getFileName());
+        assert dto.getFileExtension().equals(contentInfoEntity.getFileExtension());
     }
 }
