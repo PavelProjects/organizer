@@ -16,6 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/content")
@@ -67,5 +70,16 @@ public class ContentController {
     public void deleteContent(@RequestParam String contentInfoId) throws IOException, AuthenticationException {
         log.info("DELETE deleteContent: {}", contentInfoId);
         contentService.deleteContent(contentInfoId);
+    }
+
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<ContentDto> getUserContents() throws AuthenticationException {
+        log.info("GET getUserContents");
+        List<ContentInfoEntity> contents = contentService.getUserContents();
+        if (contents == null || contents.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return contents.stream().map(contentInfoMapper::toDto).collect(Collectors.toList());
     }
 }

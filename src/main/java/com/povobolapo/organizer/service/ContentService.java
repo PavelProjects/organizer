@@ -88,6 +88,10 @@ public class ContentService {
         }
     }
 
+    public List<ContentInfoEntity> getUserContents() throws AuthenticationException {
+        return contentInfoRepository.findByOwner(userService.getCurrentUser());
+    }
+
     private ContentEntity creteOrGetContent(byte[] content) throws IOException {
         // Сначала вычисляется хэш по байтам и проверяется, что контент с таким же хэшем раньше не создавался
         int hashCode = Arrays.hashCode(content);
