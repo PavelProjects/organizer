@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+// На эту сущность может ссылаться только ContentInfo
+// Используется для отслеживания сохраненного контента на сервере
+
 @Entity
 @Table(name = "_content")
 @Data

@@ -8,6 +8,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 
+// На эту сущность необходимо ссылаться из других сущностей
+// Например из комментария, если туда прикрепили какой-то файл
+
 @Entity
 @Table(name = "_content_info")
 @Data

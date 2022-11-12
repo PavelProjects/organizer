@@ -17,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+// Сервис для взаимодествия с контетом на диске сервера
+// Имена файлов - id из _content для удобства взаимодействия
+
 @Service
 @Scope("singleton")
 public class StorageService {
@@ -66,7 +69,7 @@ public class StorageService {
     }
 
     public void deleteAll() throws IOException {
-        Files.delete(BASE_PATH);
+        Files.deleteIfExists(BASE_PATH);
         Files.createDirectories(BASE_PATH);
     }
 }

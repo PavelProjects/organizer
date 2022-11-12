@@ -69,44 +69,52 @@ public class ContentService {
         if (contentInfoEntity.isEmpty()) {
             throw new NotFoundException("Can't found content info by id " + contentInfoId);
         }
+        // Только автор созданного контетна может его удалить
         if (!canManageContent(contentInfoEntity.get())) {
             throw new AccessDeniedException("Current user can't delete content " + contentInfoId);
         }
-
+        // Сначала удаляем инфу из бд
         contentInfoRepository.delete(contentInfoEntity.get());
         ContentEntity contentEntity = contentInfoEntity.get().getContent();
 
+        // Если контент более нигде не используется - удялем его полностью
         List<ContentInfoEntity> contentInfoEntities = contentInfoRepository.findByContentId(contentEntity.getId());
         if (contentInfoEntities == null || contentInfoEntities.isEmpty()) {
             log.warn("Deleting content {}  by user {}", contentEntity.getId(), contentInfoEntity.get().getOwner());
-            storageService.delete(contentEntity.getId());
+            // удаляем из бд
             contentRepository.delete(contentEntity);
+            // стираем с диска
+            storageService.delete(contentEntity.getId());
         }
     }
 
     private ContentEntity creteOrGetContent(byte[] content) throws IOException {
+        // Сначала вычисляется хэш по байтам и проверяется, что контент с таким же хэшем раньше не создавался
         int hashCode = Arrays.hashCode(content);
         ContentEntity contentEntity = contentRepository.findByHashCode(hashCode);
         if (contentEntity != null) {
             log.warn("Content already exist, skipping creation");
             return contentEntity;
         }
+        // Если такой контент ранее не создавался -  создаем
         contentEntity = new ContentEntity();
         contentEntity.setCreationDate(new Date());
         contentEntity.setHashCode(hashCode);
         contentRepository.save(contentEntity);
-
+        // Непосредственное сохранение на диске сервера
         storageService.save(contentEntity.getId(), content);
 
         return contentEntity;
     }
 
+    // TODO add role check
     private boolean canManageContent(ContentInfoEntity contentInfoEntity) throws AuthenticationException {
         UserEntity currentUser = userService.getCurrentUser();
         return StringUtils.equals(currentUser.getLogin(), contentInfoEntity.getOwner().getLogin());
     }
 
+    // Чистим название файла от посторнних символов
     private String fixFileName(String fileName) {
-        return fileName.replace('/', '_');
+        return fileName.replace('/', '_').replace('\\', '_');
     }
 }
