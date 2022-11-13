@@ -1,23 +1,22 @@
 package com.povobolapo.organizer.utils;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
-
-import io.jsonwebtoken.JwtException;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -26,11 +25,18 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 3600000;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final String secret;
 
-    @Value("${jwt.secret}")
-    private String secret;
+    @Autowired
+    public JwtTokenUtil(UserDetailsService userDetailsService,
+                        Environment env) {
+        this.userDetailsService = userDetailsService;
+        this.secret = env.getProperty("JWT_SECRET", "littlesecret");
+        if(StringUtils.isBlank(secret)){
+            throw new RuntimeException("Jwt secret is missing!");
+        }
+    }
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
