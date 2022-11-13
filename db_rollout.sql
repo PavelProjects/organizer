@@ -64,7 +64,7 @@ create table _user (
     id char(8) primary key default getnextid(),
     login varchar(32) references _user_credits(login) not null unique,
     name varchar(64) not null,
-    avatar varchar(8) not null references _content_info(id)
+    avatar varchar(8) references _content_info(id)
 );
 
 create table _task (
