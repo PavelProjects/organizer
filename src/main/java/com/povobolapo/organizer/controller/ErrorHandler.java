@@ -8,7 +8,6 @@ import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,7 +51,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse accessDeniedException(AccessDeniedException exc) {
         log.warn(exc.getMessage());
-        return new ErrorResponse("Permission denied", exc);
+        return new ErrorResponse("Permission denied");
     }
 
     @ExceptionHandler(AuthenticationException.class)
