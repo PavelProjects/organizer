@@ -55,7 +55,8 @@ public class ContentService {
     }
 
     public ContentInfoEntity getContentInfo(String contentInfoId) {
-        return contentInfoRepository.findById(contentInfoId).get();
+        Optional<ContentInfoEntity> contentInfoEntity = contentInfoRepository.findById(contentInfoId);
+        return contentInfoEntity.orElse(null);
     }
 
     public byte[] getContentData(ContentInfoEntity contentInfoEntity) throws IOException {
