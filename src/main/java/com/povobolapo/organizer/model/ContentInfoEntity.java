@@ -33,11 +33,10 @@ public class ContentInfoEntity implements Serializable {
     @JoinColumn(name = "content_id", referencedColumnName = "id")
     private ContentEntity content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_login", referencedColumnName = "login")
-    private UserEntity owner;
+    @Column(name = "owner")
+    private String owner;
 
-    public ContentInfoEntity(String fileName, String fileExtension, ContentEntity content, UserEntity owner) {
+    public ContentInfoEntity(String fileName, String fileExtension, ContentEntity content, String owner) {
         this.fileName = fileName;
         this.fileExtension = fileExtension;
         this.content = content;

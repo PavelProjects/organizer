@@ -46,11 +46,25 @@ create table _user_credits (
     mail varchar(128) not null
 );
 
+create table _content (
+    id char(8) primary key default getnextid(),
+    creation_date timestamp with time zone not null default now(),
+    hash_code integer not null unique
+);
+
+create table _content_info (
+    id char(8) primary key default getnextid(),
+    file_name varchar(32) not null,
+    file_extension varchar(128) not null,
+    owner varchar(32) not null,
+    content_id varchar(8) not null references _content(id)
+);
+
 create table _user (
     id char(8) primary key default getnextid(),
     login varchar(32) references _user_credits(login) not null unique,
     name varchar(64) not null,
-    avatar varchar(128)
+    avatar varchar(8) not null references _content_info(id)
 );
 
 create table _task (
@@ -86,20 +100,6 @@ create table _notification (
 create table _user_task (
     user_login varchar(32) not null references _user(login),
     task_id char(8) not null references _task(id)
-);
-
-create table _content (
-    id char(8) primary key default getnextid(),
-    creation_date timestamp with time zone not null default now(),
-    hash_code integer not null unique
-);
-
-create table _content_info (
-    id char(8) primary key default getnextid(),
-    file_name varchar(32) not null,
-    file_extension varchar(128) not null,
-    owner_login varchar(32) references _user(login) not null,
-    content_id varchar(8) not null references _content(id)
 );
 
 insert into dict_notify_type (name, caption) values

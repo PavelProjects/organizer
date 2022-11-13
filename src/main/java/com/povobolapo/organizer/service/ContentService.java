@@ -48,13 +48,13 @@ public class ContentService {
 
         UserEntity user = userService.getCurrentUser();
         ContentInfoEntity contentInfoEntity =
-                new ContentInfoEntity(fixFileName(fileName), fileExtension, contentEntity, user);
+                new ContentInfoEntity(fixFileName(fileName), fileExtension, contentEntity, user.getLogin());
         contentInfoRepository.save(contentInfoEntity);
 
         return contentInfoEntity;
     }
 
-    public ContentInfoEntity getContentByContentInfoId(String contentInfoId) {
+    public ContentInfoEntity getContentInfo(String contentInfoId) {
         return contentInfoRepository.findById(contentInfoId).get();
     }
 
@@ -89,7 +89,7 @@ public class ContentService {
     }
 
     public List<ContentInfoEntity> getUserContents() throws AuthenticationException {
-        return contentInfoRepository.findByOwner(userService.getCurrentUser());
+        return contentInfoRepository.findByOwner(userService.getCurrentUser().getLogin());
     }
 
     private ContentEntity creteOrGetContent(byte[] content) throws IOException {
@@ -114,7 +114,7 @@ public class ContentService {
     // TODO add role check
     private boolean canManageContent(ContentInfoEntity contentInfoEntity) throws AuthenticationException {
         UserEntity currentUser = userService.getCurrentUser();
-        return StringUtils.equals(currentUser.getLogin(), contentInfoEntity.getOwner().getLogin());
+        return StringUtils.equals(currentUser.getLogin(), contentInfoEntity.getOwner());
     }
 
     // Чистим название файла от посторнних символов

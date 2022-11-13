@@ -39,7 +39,7 @@ public class ContentController {
     @ResponseStatus(HttpStatus.CREATED)
     public ContentDto uploadContent(@RequestParam MultipartFile file) throws IOException, AuthenticationException {
         log.info("POST uploadContent: {} {}", file.getName(), file.getContentType());
-        ContentInfoEntity contentInfoEntity = contentService.createContent(file.getName(), file.getContentType(), file.getBytes());
+        ContentInfoEntity contentInfoEntity = contentService.createContent(file.getOriginalFilename(), file.getContentType(), file.getBytes());
         return contentInfoMapper.toDto(contentInfoEntity);
     }
 
@@ -47,7 +47,7 @@ public class ContentController {
     @ResponseStatus(HttpStatus.OK)
     public Resource getContent(@RequestParam String contentInfoId) throws IOException {
         log.info("GET getContent: {}", contentInfoId);
-        ContentInfoEntity contentInfoEntity = contentService.getContentByContentInfoId(contentInfoId);
+        ContentInfoEntity contentInfoEntity = contentService.getContentInfo(contentInfoId);
         if (contentInfoEntity == null) {
             return null;
         }
@@ -58,7 +58,7 @@ public class ContentController {
     @ResponseStatus(HttpStatus.OK)
     public ContentDto getContentInfo(@RequestParam String contentInfoId) throws IOException {
         log.info("GET getContentInfo: {}", contentInfoId);
-        ContentInfoEntity contentInfoEntity = contentService.getContentByContentInfoId(contentInfoId);
+        ContentInfoEntity contentInfoEntity = contentService.getContentInfo(contentInfoId);
         if (contentInfoEntity == null) {
             return null;
         }

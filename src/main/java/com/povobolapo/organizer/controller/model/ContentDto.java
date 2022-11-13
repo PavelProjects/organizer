@@ -12,5 +12,5 @@ public class ContentDto {
     private String contentId;
     private String fileName;
     private String fileExtension;
-    private UserDto owner;
+    private String owner;
 }

@@ -36,7 +36,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserCreditsRepository userCreditsRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       UserCreditsRepository userCreditsRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userCreditsRepository = userCreditsRepository;
         this.passwordEncoder = passwordEncoder;

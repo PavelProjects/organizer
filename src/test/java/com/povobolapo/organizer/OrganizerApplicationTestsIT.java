@@ -70,7 +70,7 @@ class OrganizerApplicationTestsIT {
     @Transactional
     void testManageUser() throws AuthenticationException {
         // Создаем юзера
-        UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik"));
+        UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik", ""));
         assertTrue(StringUtils.isNotBlank(user.getId()));
 
         // Делаем вид, что удалить пытается другой юзер

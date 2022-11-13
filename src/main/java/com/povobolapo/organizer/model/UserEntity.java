@@ -1,9 +1,8 @@
 package com.povobolapo.organizer.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,8 +12,7 @@ import java.io.Serializable;
 @Table(name = "_user")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class UserEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -28,7 +26,7 @@ public class UserEntity implements Serializable {
     @Column(name = "name", length = 64, nullable = false)
     private String name;
 
-    @Column(name = "avatar", length = 128)
+    @Column(name = "avatar", length = 8)
     private String avatar;
 
     public UserEntity(String login, String name, String avatar) {
