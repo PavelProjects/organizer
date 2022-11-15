@@ -78,7 +78,7 @@ public class MappersTest {
         assert dto.getId().equals(comment.getId());
         assert dto.getBody().equals(comment.getBody());
         assert dto.getCreationDate().equals(comment.getCreationDate());
-        assert dto.getTask().getId().equals(task.getId());
+        assert dto.getTask().equals(task.getId());
         assert dto.getAuthor().getLogin().equals(userEntity.getLogin());
 
 
@@ -117,7 +117,6 @@ public class MappersTest {
         ContentDto dto = contentInfoMapper.toDto(contentInfoEntity);
 
         assert dto.getContentInfoId().equals(contentInfoEntity.getId());
-        assert dto.getContentId().equals(content.getId());
         assert dto.getOwner().equals(userEntity.getLogin());
         assert dto.getFileName().equals(contentInfoEntity.getFileName());
         assert dto.getFileExtension().equals(content.getFileExtension());

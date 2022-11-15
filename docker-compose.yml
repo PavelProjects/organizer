@@ -22,14 +22,14 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/organizer
-      SPRING_DATASOURCE_USERNAME: organizer
-      SPRING_DATASOURCE_PASSWORD: organizer
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_HIBERNATE_SHOW_SQL: false
-      JWT_SECRET: jwtsecret
+      JWT_SECRET: ${JWT_SECRET}
       STORAGE_BASE_PATH: /storage
       STORAGE_MAX_FILE_SIZE: 1000000
   db:
@@ -40,11 +40,11 @@ services:
         aliases:
           - organizer_network
     environment:
-      POSTGRES_DB: organizer
-      POSTGRES_USER: organizer
-      POSTGRES_PASSWORD: organizer
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5433:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - ./db/:/docker-entrypoint-initdb.d/

@@ -1,6 +1,5 @@
 package com.povobolapo.organizer.controller.model.comment;
 
-import com.povobolapo.organizer.controller.model.task.TaskDto;
 import com.povobolapo.organizer.controller.model.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +16,6 @@ public class CommentDto {
     private String id;
     private Date creationDate;
     private String body;
-    private TaskDto task;
+    private String task;
     private UserDto author;
 }

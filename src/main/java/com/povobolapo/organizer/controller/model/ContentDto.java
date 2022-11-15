@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContentDto {
     private String contentInfoId;
-    private String contentId;
     private String fileName;
     private String fileExtension;
     private String owner;
