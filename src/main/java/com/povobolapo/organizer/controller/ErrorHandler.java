@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.naming.AuthenticationException;
-import java.io.IOException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.Locale;
 
 @Slf4j
@@ -32,29 +32,11 @@ public class ErrorHandler {
         Locale.setDefault(new Locale("en"));
     }
 
-    //TODO настроить отлов ошибок spring security
-    //https://www.baeldung.com/spring-security-exceptionhandler
-    //https://www.baeldung.com/spring-security-exceptions
-    //https://stackoverflow.com/questions/64015805/how-to-properly-handle-jwtexception
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Token expired");
-    }
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse badToken(MalformedJwtException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Bad token");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse wrongToken(JwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Wrong token");
     }
 
     @ExceptionHandler(ValidationException.class)

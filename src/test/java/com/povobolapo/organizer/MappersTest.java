@@ -1,6 +1,10 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.controller.model.*;
+import com.povobolapo.organizer.controller.model.ContentDto;
+import com.povobolapo.organizer.controller.model.comment.CommentDto;
+import com.povobolapo.organizer.controller.model.notification.NotificationDto;
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.user.UserDto;
 import com.povobolapo.organizer.mapper.*;
 import com.povobolapo.organizer.model.*;
 import org.junit.jupiter.api.Test;
