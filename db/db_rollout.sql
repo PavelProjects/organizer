@@ -43,7 +43,9 @@ create table _user_credits (
     id char(8) primary key default getnextid(),
     login varchar(32) not null unique,
     password varchar(128) not null,
-    mail varchar(128) not null
+    mail varchar(128) not null unique,
+    active boolean not null default true,
+    creation_date timestamp with time zone not null default now()
 );
 
 create table _content (
@@ -65,6 +67,29 @@ create table _user (
     login varchar(32) references _user_credits(login) not null unique,
     name varchar(64) not null,
     avatar varchar(8) references _content_info(id)
+);
+
+create table _role(
+    id char(8) primary key default getnextid(),
+    name varchar(64) not null unique
+);
+
+create table _privilege(
+    id char(8) primary key default getnextid(),
+    name varchar(64) not null unique
+);
+
+create table _user_roles(
+    id char(8) primary key default getnextid(),
+    user_login varchar(32) references _user_credits(login) not null,
+    role_id char(8) not null references _role(id),
+    PRIMARY KEY (user_login, role_id)
+);
+
+create table _role_privileges(
+    id char(8) primary key default getnextid(),
+    role_id varchar(32) references _role(id) not null,
+    privilege_id char(8) not null references _privilege(id)
 );
 
 create table _task (
@@ -104,11 +129,23 @@ create table _user_task (
 
 insert into dict_notify_type (name, caption) values
     ('system', 'Система'),
-     ('comment', 'Комментарий'),
-     ('task', 'Задача');
-
+    ('comment', 'Комментарий'),
+    ('task', 'Задача');
 insert into dict_task_status (name, caption) values ('new', 'New task');
-insert into _user_credits values (getnextid(), 'autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'jopa@mail.ru');
+
+insert into _privilege (name) values ('READ_ALL'), ('DELETE_ALL'), ('MODIFY_ALL');
+insert into _role (name) values ('user'), ('moderator'), ('admin');
+
+insert into _role_privileges (role_id, privilege_id) select r.id, p.id from _role r, _privilege p where r.name = 'user' and p.name = 'READ_ALL';
+insert into _role_privileges (role_id, privilege_id) select r.id, p.id from _role r, _privilege p where r.name = 'moderator' and p.name in ('READ_ALL', 'MODIFY_ALL');
+insert into _role_privileges (role_id, privilege_id) select r.id, p.id from _role r, _privilege p where r.name = 'admin' and p.name in ('READ_ALL', 'MODIFY_ALL', 'DELETE_ALL');
+
+insert into _user_credits values (getnextid(), 'autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'jopa@mail.ru', true);
 insert into _user (login, name) values ('autotest_user', 'main buddy');
+insert into _user_roles (user_login, role_id) select 'autotest_user', r.id from _role r where r.name = 'admin';
+
+insert into _user_credits values (getnextid(), 'basic_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6', 'jopa@mail.ru', true);
+insert into _user (login, name) values ('basic_user', 'little boi');
+insert into _user_roles (user_login, role_id) select 'basic_user', r.id from _role r where r.name = 'user';
 
 commit;

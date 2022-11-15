@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +74,7 @@ public class UserService {
     @Transactional
     public void updateUser(UserRequestBody userBody) throws AuthenticationException {
         // Менять можно только свою учетку
-        if (!canUpdateUser(userBody.getLogin())) {
+        if (!UserAuthoritiesService.canModifyUserData(userBody.getLogin())) {
             throw new AccessDeniedException("Permission denied!");
         }
 
@@ -93,6 +90,7 @@ public class UserService {
             user.setAvatar(userBody.getAvatar());
         }
 
+        log.info("User {} was updated by {}", userBody.getLogin(), UserAuthoritiesService.getCurrentUserLogin());
     }
 
     @Transactional
@@ -104,39 +102,20 @@ public class UserService {
 
         // Можно удалить только свою учетку
         // Если учетку пытается удалить другой юзер кидаем ошибку
-        if (!canUpdateUser(login)) {
+        if (!UserAuthoritiesService.canDeleteUserData(login)) {
             throw new AccessDeniedException("Permission denied!");
         }
 
         userRepository.delete(user);
+        log.warn("User {} was deleted by {}", login, UserAuthoritiesService.getCurrentUserLogin());
     }
 
     public UserEntity getUserByLogin(String login) {
         return userRepository.findByLogin(login);
     }
 
-    // Проверяет, может ли текущий юзер менять юзера
-    private boolean canUpdateUser(String userLoginToChange) throws AuthenticationException {
-        String currentUser = authenticatedUserLogin();
-        log.warn(String.format("User %s trying to edit user %s", currentUser, userLoginToChange));
-        return StringUtils.equals(userLoginToChange, currentUser);
-    }
-
-    @NotNull
     public UserEntity getCurrentUser() throws AuthenticationException {
-        return getUserByLogin(authenticatedUserLogin());
-    }
-
-    // Гарантируется, что вернется не пустое значение
-    @NonNull
-    @NotEmpty
-    public String authenticatedUserLogin() throws AuthenticationException {
-        // Получем из контекста безопасности какой юзер сейчас делает запрос
-        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-        if (currentUser == null || StringUtils.isBlank(currentUser.getName())) {
-            throw new AuthenticationException("Current user didn't authenticate!");
-        }
-        return currentUser.getName();
+        return getUserByLogin(UserAuthoritiesService.getCurrentUserLogin());
     }
 
     private String encodePassword(String password) {
