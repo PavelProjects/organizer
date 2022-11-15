@@ -94,8 +94,8 @@ create table _participants (
 );
 
 create table _participants (
-                               task_id char(8) not null references _task(id),
-                               user_login varchar(32) not null references _user(login)
+    task_id char(8) not null references _task(id),
+    user_login varchar(32) not null references _user(login)
 );
 
 insert into dict_notify_type (name, caption) values
