@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -91,7 +88,11 @@ public class TaskService {
             Set<UserEntity> party = taskRequest.getParticipants().stream()
                     .map(userService::getUserByLogin).collect(Collectors.toSet());
             task.setParticipants(party);
+        } else {
+            task.setParticipants(new HashSet<>());
         }
+        task.getParticipants().add(authorUser);
+
         notificationService.createTaskNotification(task, NOTIFICATION_PARTICIPANT_ADDED);
         return taskRepository.save(task);
     }
