@@ -34,3 +34,5 @@ build/
 .vscode/
 /server_pass.txt
 /.idea/
+
+.env
