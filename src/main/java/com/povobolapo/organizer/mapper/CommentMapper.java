@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.mapper;
 
-import com.povobolapo.organizer.controller.model.CommentDto;
+import com.povobolapo.organizer.controller.model.comment.CommentDto;
 import com.povobolapo.organizer.model.CommentEntity;
 import org.mapstruct.Mapper;
 

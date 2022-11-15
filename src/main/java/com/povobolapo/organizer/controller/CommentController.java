@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.CommentDto;
-import com.povobolapo.organizer.controller.model.CreateCommentRequest;
+import com.povobolapo.organizer.controller.model.comment.CommentDto;
+import com.povobolapo.organizer.controller.model.comment.CreateCommentRequest;
 import com.povobolapo.organizer.mapper.CommentMapper;
 import com.povobolapo.organizer.model.CommentEntity;
 import com.povobolapo.organizer.service.CommentService;

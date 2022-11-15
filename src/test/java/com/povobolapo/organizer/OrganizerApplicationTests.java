@@ -1,6 +1,6 @@
 package com.povobolapo.organizer;
 
-import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.controller.model.user.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.NotificationEntity;
 import com.povobolapo.organizer.model.UserEntity;
@@ -71,7 +71,8 @@ class OrganizerApplicationTests {
     @Transactional
     void testManageUser() throws AuthenticationException {
         // Создаем юзера
-        UserEntity user = userService.createUser(new UserRequestBody(TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik"));
+        UserEntity user = userService.createUser(new UserRequestBody(
+                TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik"));
         assertTrue(StringUtils.isNotBlank(user.getId()));
 
         // Делаем вид, что удалить пытается другой юзер
@@ -104,17 +105,20 @@ class OrganizerApplicationTests {
         // Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
         List<NotificationEntity> notifications = notificationService.getUserNotifications();
         assert notifications != null && !notifications.isEmpty();
-        List<String> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
+        List<String> ids = notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1")
+                && !notification.isChecked()).map(NotificationEntity::getId).collect(Collectors.toList());
         assert ids.size() == 1;
 
         // Помечаем уведомление просмотренным и проверяем, что в бд оно обновилось
         notificationService.markNotificationsChecked(ids);
         notifications = notificationService.getUserNotifications();
-        assert notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked()).count() == 1;
+        assert notifications.stream().filter(notification -> StringUtils.equals(notification.getBody(), "unit_test_1")
+                && notification.isChecked()).count() == 1;
 
         notificationService.deleteNotificationsByIds(ids);
         notifications = notificationService.getUserNotifications();
-        assert notifications.stream().noneMatch(notification -> StringUtils.equals(notification.getBody(), "unit_test_1") && notification.isChecked());
+        assert notifications.stream().noneMatch(notification -> StringUtils.equals(notification.getBody(), "unit_test_1")
+                && notification.isChecked());
     }
 
     //TODO ПЕРЕДЕЛАТЬ. Печатать в консоль ничего не надо.

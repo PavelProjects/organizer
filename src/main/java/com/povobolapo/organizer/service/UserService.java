@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.service;
 
 
-import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.controller.model.user.UserRequestBody;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.UserCreditsEntity;

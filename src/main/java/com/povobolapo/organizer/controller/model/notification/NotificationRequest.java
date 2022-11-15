@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.controller.model;
+package com.povobolapo.organizer.controller.model.notification;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.povobolapo.organizer.controller.model;
+package com.povobolapo.organizer.controller.model.auth;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
