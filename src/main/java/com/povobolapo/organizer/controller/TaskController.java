@@ -63,7 +63,7 @@ public class TaskController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Validated(OnUpdate.class)
-    public TaskDto updateTask(@RequestBody @Valid TaskRequestBody task) {
+    public TaskDto updateTask(@RequestBody @Valid TaskRequestBody task) throws AuthenticationException {
         log.debug("GET-request: updateTask: (id={})", task.getId());
         return taskMapper.toDto(taskService.update(task));
     }
