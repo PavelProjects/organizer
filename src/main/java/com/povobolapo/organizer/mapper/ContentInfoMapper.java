@@ -10,7 +10,6 @@ import org.mapstruct.Mappings;
 public interface ContentInfoMapper {
     @Mappings({
             @Mapping(target = "contentInfoId", source = "id"),
-            @Mapping(target = "contentId", source = "content.id"),
             @Mapping(target = "fileExtension", source = "content.fileExtension")
     })
     ContentDto toDto(ContentInfoEntity entity);
