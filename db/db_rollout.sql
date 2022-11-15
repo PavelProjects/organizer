@@ -93,6 +93,11 @@ create table _participants (
                                user_login varchar(32) not null references _user(login)
 );
 
+create table _participants (
+                               task_id char(8) not null references _task(id),
+                               user_login varchar(32) not null references _user(login)
+);
+
 insert into dict_notify_type (name, caption) values
                                                  ('system', 'Система'),
                                                  ('comment', 'Комментарий'),
