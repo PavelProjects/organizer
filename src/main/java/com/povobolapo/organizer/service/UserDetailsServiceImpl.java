@@ -3,7 +3,6 @@ package com.povobolapo.organizer.service;
 import java.util.ArrayList;
 
 import com.povobolapo.organizer.model.UserCreditsEntity;
-import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.repository.UserCreditsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

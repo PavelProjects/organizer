@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.NotificationDto;
-import com.povobolapo.organizer.controller.model.NotificationRequest;
+import com.povobolapo.organizer.controller.model.notification.NotificationDto;
+import com.povobolapo.organizer.controller.model.notification.NotificationRequest;
 import com.povobolapo.organizer.mapper.NotificationMapper;
 import com.povobolapo.organizer.model.NotificationEntity;
 import com.povobolapo.organizer.service.NotificationService;

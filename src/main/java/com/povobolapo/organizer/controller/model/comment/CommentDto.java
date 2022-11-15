@@ -1,5 +1,7 @@
-package com.povobolapo.organizer.controller.model;
+package com.povobolapo.organizer.controller.model.comment;
 
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class NotificationDto {
+public class CommentDto {
     private String id;
     private Date creationDate;
-    private UserDto user;
-    private UserDto creator;
     private String body;
-    private boolean checked;
+    private TaskDto task;
+    private UserDto author;
 }

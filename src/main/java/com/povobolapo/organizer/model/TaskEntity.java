@@ -1,15 +1,13 @@
 package com.povobolapo.organizer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "_task")
@@ -17,6 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class TaskEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
@@ -32,6 +31,7 @@ public class TaskEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status", referencedColumnName = "name")
+    @ToString.Exclude
     private DictTaskStatus dictTaskStatus;
 
     @Column(name = "creation_date")
@@ -42,18 +42,21 @@ public class TaskEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author", referencedColumnName = "login")
+    @ToString.Exclude
     private UserEntity author;
 
-    public TaskEntity(DictTaskStatus status, UserEntity author) {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "_user_task",
+        joinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_login", referencedColumnName = "login")}
+    )
+    @ToString.Exclude
+    private Set<UserEntity> participants;
+
+    public TaskEntity(DictTaskStatus status, UserEntity author, Set<UserEntity> participants) {
         this.dictTaskStatus = status;
         this.author = author;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "id: %s\nname: %s\n", id, name
-        );
+        this.participants = participants;
     }
 
     @Override

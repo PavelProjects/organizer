@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.HashSet;
 
 @SpringBootTest(classes = OrganizerApplication.class)
 public class MappersTest {
@@ -30,7 +31,8 @@ public class MappersTest {
             new DictTaskStatus("id", "name", "caption"),
             new Date(),
             new Date(),
-            userEntity
+            userEntity,
+            new HashSet<>()
     );
     private final CommentEntity comment = new CommentEntity(
             "id",

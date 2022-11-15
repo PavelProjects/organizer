@@ -1,7 +1,7 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.UserDto;
-import com.povobolapo.organizer.controller.model.UserRequestBody;
+import com.povobolapo.organizer.controller.model.user.UserDto;
+import com.povobolapo.organizer.controller.model.user.UserRequestBody;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.mapper.UserMapper;
 import com.povobolapo.organizer.service.UserService;
