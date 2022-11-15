@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class OrganizerApplicationTests {
     private static final String TEST_USER_LOGIN = "autotest_user_2";
     private static final String AUTOTEST_LOGIN = "autotest_user";
+    private static final String BASIC_USER_LOGIN = "basic_user";
 
     @Autowired
     private TaskService taskService;
@@ -54,14 +55,14 @@ class OrganizerApplicationTests {
     void checkCurrentUser() throws AuthenticationException {
         // Пробуем получить текущего юзера, когда никто не авторизовался
         try {
-            userService.authenticatedUserLogin();
+            UserAuthoritiesService.getCurrentUserLogin();
         } catch (AuthenticationException exc) {
             assert !exc.getMessage().isEmpty();
         }
 
         // Проверяем, что при авторизации мы получим правильного юзера
         setSecurityContext(AUTOTEST_LOGIN);
-        assert StringUtils.equals(AUTOTEST_LOGIN, userService.authenticatedUserLogin());
+        assert StringUtils.equals(AUTOTEST_LOGIN, UserAuthoritiesService.getCurrentUserLogin());
         UserEntity current = userService.getCurrentUser();
         assert current != null && StringUtils.equals(current.getLogin(), AUTOTEST_LOGIN);
     }
@@ -75,7 +76,7 @@ class OrganizerApplicationTests {
         assertTrue(StringUtils.isNotBlank(user.getId()));
 
         // Делаем вид, что удалить пытается другой юзер
-        setSecurityContext("autotest_user");
+        setSecurityContext(BASIC_USER_LOGIN);
         try {
             userService.deleteUser(TEST_USER_LOGIN);
         } catch (AccessDeniedException exception) {
@@ -175,7 +176,7 @@ class OrganizerApplicationTests {
         try {
             eventDispatcher.dispatch(new DummyEvent());
         } catch (Exception ex) {
-            assert ((RuntimeException) ex).getMessage().equals("yeah");
+            assert ex.getMessage().equals("yeah");
         }
     }
 

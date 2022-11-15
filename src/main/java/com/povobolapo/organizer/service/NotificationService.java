@@ -44,7 +44,7 @@ public class NotificationService {
     }
 
     public List<NotificationEntity> getUserNotifications() throws AuthenticationException {
-        return notificationRepository.findByUserLogin(userService.authenticatedUserLogin());
+        return notificationRepository.findByUserLogin(UserAuthoritiesService.getCurrentUserLogin());
     }
 
     // Метод для создания системных уведмолений
@@ -130,7 +130,7 @@ public class NotificationService {
     @Transactional
     public void markNotificationsChecked(List<String> notificationIds) throws AuthenticationException {
         log.debug("Marking notifications checked {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserLogin());
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, UserAuthoritiesService.getCurrentUserLogin());
         if (notificationEntities.isEmpty()) {
             log.warn("No notification were found");
             return;
@@ -144,7 +144,7 @@ public class NotificationService {
     @Transactional
     public void deleteNotificationsByIds(List<String> notificationIds) throws AuthenticationException {
         log.debug("Deleting notifications {}", notificationIds);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, userService.authenticatedUserLogin());
+        List<NotificationEntity> notificationEntities = notificationRepository.findByIdInAndUserLogin(notificationIds, UserAuthoritiesService.getCurrentUserLogin());
         if (notificationEntities.isEmpty()) {
             log.debug("No notification were found");
             return;
@@ -154,7 +154,7 @@ public class NotificationService {
 
     @Transactional
     public void deleteNotifications(List<NotificationEntity> notificationEntities) throws AuthenticationException{
-        String currentUser = userService.authenticatedUserLogin();
+        String currentUser = UserAuthoritiesService.getCurrentUserLogin();
         List<NotificationEntity> toDelete = notificationEntities.stream()
                 .filter(notificationEntity -> StringUtils.equals(notificationEntity.getUser().getLogin(), currentUser)).collect(Collectors.toList());
         if (toDelete.isEmpty()) {

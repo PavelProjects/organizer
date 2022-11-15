@@ -98,7 +98,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse accessDeniedException(AccessDeniedException exc) {
         log.warn(exc.getMessage());
-        return new ErrorResponse("Permission denied", exc);
+        return new ErrorResponse("Permission denied");
     }
 
     @ExceptionHandler(AuthenticationException.class)
