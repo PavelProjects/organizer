@@ -46,7 +46,7 @@ public class TaskEntity implements Serializable {
     private UserEntity author;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "_participants",
+    @JoinTable(name = "_user_task",
         joinColumns = {@JoinColumn(name = "task_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "user_login", referencedColumnName = "login")}
     )
