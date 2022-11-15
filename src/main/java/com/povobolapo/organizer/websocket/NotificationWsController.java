@@ -21,7 +21,6 @@ import java.util.Map;
 public class NotificationWsController {
     private static final Logger log = LoggerFactory.getLogger(NotificationWsController.class);
 
-    // Через Autowired spring тянуть не хочет
     private final JwtTokenUtil jwtTokenUtil = SpringContext.getBean(JwtTokenUtil.class);
     private final WsSessionManager sessionManager = SpringContext.getBean(WsSessionManager.class);
 
