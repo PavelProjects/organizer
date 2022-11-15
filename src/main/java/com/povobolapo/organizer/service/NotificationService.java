@@ -4,6 +4,7 @@ import com.povobolapo.organizer.model.*;
 import com.povobolapo.organizer.repository.NotificationRepository;
 import com.povobolapo.organizer.repository.NotifyTypeRepository;
 import com.povobolapo.organizer.utils.EventDispatcher;
+import com.povobolapo.organizer.utils.TemplateConverter;
 import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,17 +33,14 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotifyTypeRepository notifyTypeRepository;
-    private final UserService userService;
     private final EventDispatcher eventDispatcher;
 
     @Autowired
     public NotificationService(NotificationRepository notificationRepository,
                                NotifyTypeRepository notifyTypeRepository,
-                               UserService userService,
                                EventDispatcher eventDispatcher){
         this.notificationRepository = notificationRepository;
         this.notifyTypeRepository = notifyTypeRepository;
-        this.userService = userService;
         this.eventDispatcher = eventDispatcher;
     }
 
@@ -66,6 +67,12 @@ public class NotificationService {
     }
 
     // Метод создания уведомлений для комментариев
+
+    @Transactional
+    public void createCommentNotification(Collection<UserEntity> users, CommentEntity comment) {
+        users.forEach(u -> createCommentNotification(u, comment));
+    }
+
     @Transactional
     public void createCommentNotification(UserEntity userEntity, CommentEntity comment) {
         checkNotificationCount(userEntity.getLogin());
@@ -83,14 +90,19 @@ public class NotificationService {
         }
     }
 
+    @Transactional
+    public void createTaskNotification(TaskEntity task, @NotNull @NotEmpty String bodyTemplate) {
+        task.getParticipants().forEach(u -> createTaskNotification(u, task, TemplateConverter.convertTemplate(bodyTemplate, u, task)));
+    }
+
     // Метод создания уведомлений для тасок
     // Например таска создана, таска обновлена
     @Transactional
-    public void createTaskNotification(UserEntity userEntity, TaskEntity task) {
+    public void createTaskNotification(UserEntity userEntity, TaskEntity task, @NotNull @NotEmpty String bodyTemplate) {
         checkNotificationCount(userEntity.getLogin());
         log.debug("Creating new task notification for user {} for task {}", userEntity, task);
         NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.TASK.getName());
-        notificationEntity.setBody(getTaskNotificationBody(task));
+        notificationEntity.setBody(bodyTemplate);
         notificationEntity.setCreator(task.getAuthor());
         notificationRepository.save(notificationEntity);
         log.debug("Task notification created");
@@ -164,11 +176,6 @@ public class NotificationService {
 
         notificationRepository.deleteAll(toDelete);
         log.debug("Notifications deleted");
-    }
-
-    private String getTaskNotificationBody(TaskEntity task) {
-        return String.format("Задача [%s] - [%s] была изменена",
-                task.getName(), task.getDictTaskStatus().getCaption());
     }
 
     private NotificationEntity createBasicNotification(UserEntity userEntity, String type) {

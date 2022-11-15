@@ -49,25 +49,31 @@ public class UserService {
             log.info("User already exists, skipping creation");
             return user;
         }
+        String fixedLogin = userBody.getLogin().replaceAll("\\s+","");
+
         // Сначала создаем приватные данные
-        createUserCredits(userBody);
+        createUserCredits(fixedLogin, userBody.getPassword(), userBody.getMail());
         // Далее публичные
-        user = userBody.toUser();
+        user = new UserEntity() {{
+            setLogin(fixedLogin);
+            setName(userBody.getName());
+            setAvatar(contentService.getContentInfo(userBody.getAvatar()));
+        }};
         userRepository.save(user);
         return user;
     }
 
-    private void createUserCredits(UserRequestBody userBody) {
+    private void createUserCredits(String login, String password, String mail) {
         // Валидация здесь, а не в объекте, тк RequestBody используется в методе апдейта,
         // где пароль может быть null
-        if (StringUtils.isBlank(userBody.getPassword())) {
+        if (StringUtils.isBlank(password)) {
             throw new ValidationException("Password is missing!");
         }
 
         UserCreditsEntity userCreditsEntity = new UserCreditsEntity(
-                userBody.getLogin(),
-                encodePassword(userBody.getPassword()),
-                userBody.getMail()
+                login,
+                encodePassword(password),
+                mail
         );
         userCreditsRepository.save(userCreditsEntity);
     }

@@ -45,15 +45,12 @@ public class CommentService {
         CommentEntity comment = new CommentEntity(currentUser, task, body);
         comment.setCreationDate(new Date());
         commentRepository.save(comment);
-        createNotification(comment);
+        createNotification(comment, task);
         return comment;
     }
 
-    private void createNotification(CommentEntity comment) {
-        // TODO рассылка уведомления участникам задачи
-        // реализовать после реализации исполнителей задачи
-        // Тестовая реализация
-        notificationService.createCommentNotification(comment.getAuthor(), comment);
+    private void createNotification(CommentEntity comment, TaskEntity task) {
+        notificationService.createCommentNotification(task.getParticipants(), comment);
     }
 
     public List<CommentEntity> getTaskComments(String taskId) {

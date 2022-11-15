@@ -1,6 +1,5 @@
 package com.povobolapo.organizer.controller.model.user;
 
-import com.povobolapo.organizer.model.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,15 +30,4 @@ public class UserRequestBody {
 
     @Schema(description = "Передавать contentInfoId после загрузки контента на сервер")
     private String avatar;
-
-    public UserEntity toUser() {
-        UserEntity user = new UserEntity();
-        user.setLogin(this.login);
-        if (this.name == null || this.name.isBlank()) {
-            user.setName(this.login);
-        } else {
-            user.setName(this.name);
-        }
-        return user;
-    }
 }
