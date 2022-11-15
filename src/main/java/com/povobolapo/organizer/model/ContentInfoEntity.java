@@ -26,9 +26,6 @@ public class ContentInfoEntity implements Serializable {
     @Column(name = "file_name")
     private String fileName;
 
-    @Column(name = "file_extension")
-    private String fileExtension;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", referencedColumnName = "id")
     private ContentEntity content;
@@ -36,9 +33,8 @@ public class ContentInfoEntity implements Serializable {
     @Column(name = "owner")
     private String owner;
 
-    public ContentInfoEntity(String fileName, String fileExtension, ContentEntity content, String owner) {
+    public ContentInfoEntity(String fileName, ContentEntity content, String owner) {
         this.fileName = fileName;
-        this.fileExtension = fileExtension;
         this.content = content;
         this.owner = owner;
     }

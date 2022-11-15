@@ -27,11 +27,9 @@ public class ContentEntity implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @Column(name = "file_extension")
+    private String fileExtension;
+
     @Column(name = "hash_code")
     private int hashCode;
-
-    public ContentEntity(Date creationDate, int hashCode) {
-        this.creationDate = creationDate;
-        this.hashCode = hashCode;
-    }
 }

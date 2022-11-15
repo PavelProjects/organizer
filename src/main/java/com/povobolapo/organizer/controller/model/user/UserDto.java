@@ -1,5 +1,6 @@
 package com.povobolapo.organizer.controller.model.user;
 
+import com.povobolapo.organizer.controller.model.ContentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,6 @@ import lombok.Setter;
 public class UserDto {
     private String login;
     private String name;
-    private String avatar;
+    private ContentDto avatar;
 
 }

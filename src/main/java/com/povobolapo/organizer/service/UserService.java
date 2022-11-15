@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 
 @Service
@@ -31,14 +29,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserCreditsRepository userCreditsRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ContentService contentService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        UserCreditsRepository userCreditsRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       ContentService contentService) {
         this.userRepository = userRepository;
         this.userCreditsRepository = userCreditsRepository;
         this.passwordEncoder = passwordEncoder;
+        this.contentService = contentService;
     }
 
     @Transactional
@@ -87,7 +88,7 @@ public class UserService {
             user.setName(userBody.getName());
         }
         if (StringUtils.isNotBlank(userBody.getAvatar())) {
-            user.setAvatar(userBody.getAvatar());
+            user.setAvatar(contentService.getContentInfo(userBody.getAvatar()));
         }
 
         log.info("User {} was updated by {}", userBody.getLogin(), UserAuthoritiesService.getCurrentUserLogin());

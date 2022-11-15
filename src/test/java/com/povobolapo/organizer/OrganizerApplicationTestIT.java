@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = OrganizerApplication.class)
-class OrganizerApplicationTestsIT {
+class OrganizerApplicationTestIT {
     private static final String TEST_USER_LOGIN = "autotest_user_2";
     private static final String AUTOTEST_LOGIN = "autotest_user";
     private static final String BASIC_USER_LOGIN = "basic_user";

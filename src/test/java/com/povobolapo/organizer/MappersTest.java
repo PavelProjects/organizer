@@ -45,9 +45,8 @@ public class MappersTest {
             task,
             "body"
     );
-    private final ContentEntity content = new ContentEntity("123", new Date(), 123);
-    private final ContentInfoEntity contentInfoEntity = new ContentInfoEntity("123", "test", "png", content, userEntity.getLogin());
-
+    private final ContentEntity content = new ContentEntity("123", new Date(),"png", 123);
+    private final ContentInfoEntity contentInfoEntity = new ContentInfoEntity("123", "test",  content, userEntity.getLogin());
 
     @Test
     public void user() {
@@ -121,6 +120,6 @@ public class MappersTest {
         assert dto.getContentId().equals(content.getId());
         assert dto.getOwner().equals(userEntity.getLogin());
         assert dto.getFileName().equals(contentInfoEntity.getFileName());
-        assert dto.getFileExtension().equals(contentInfoEntity.getFileExtension());
+        assert dto.getFileExtension().equals(content.getFileExtension());
     }
 }

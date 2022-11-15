@@ -25,19 +25,20 @@ import java.nio.file.Paths;
 public class StorageService {
     private static final Logger log = LoggerFactory.getLogger(StorageService.class);
     private final Path BASE_PATH;
-    private final int MAX_FILE_SiZE;
+    private final int MAX_FILE_SIZE;
 
     @Autowired
     public StorageService(Environment env) throws IOException {
-        String basePath = env.getProperty("storage.base.path");
-        String maxFileSize = env.getProperty("storage.file.size.max");
+        String basePath = env.getProperty("STORAGE_BASE_PATH");
+        Integer maxFileSize = env.getProperty("STORAGE_MAX_FILE_SIZE", Integer.class);
 
-        if (StringUtils.isBlank(basePath) || StringUtils.isBlank(maxFileSize)) {
+        if (StringUtils.isBlank(basePath) || maxFileSize == null || maxFileSize == 0) {
             throw new RuntimeException("Some of storage properties are missing!");
         }
 
         BASE_PATH = Paths.get(basePath);
-        MAX_FILE_SiZE = Integer.parseInt(maxFileSize);
+        MAX_FILE_SIZE = maxFileSize;
+        log.info("Storage service started in dir {} with max file size {}", BASE_PATH, MAX_FILE_SIZE);
 
         Files.createDirectories(BASE_PATH);
     }
@@ -47,7 +48,7 @@ public class StorageService {
     }
 
     public String save(@NonNull @NotEmpty String contentId, @NotEmpty byte[] content) throws IOException {
-        if (content.length > MAX_FILE_SiZE) {
+        if (content.length > MAX_FILE_SIZE) {
             throw new StorageException("File is too large!");
         }
         Path path = Files.write(Paths.get(BASE_PATH.toString(), contentId), content);

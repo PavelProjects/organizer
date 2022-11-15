@@ -49,7 +49,7 @@ public class ContentTestIT {
             ContentInfoEntity contentInfoEntity = contentService.createContent(splitName[0], splitName[1], in.readAllBytes());
             assert contentInfoEntity != null;
             assert contentInfoEntity.getFileName().equals(splitName[0]);
-            assert contentInfoEntity.getFileExtension().equals(splitName[1]);
+            assert contentInfoEntity.getContent().getFileExtension().equals(splitName[1]);
             assert contentInfoEntity.getContent() != null;
 
             assert contentService.getContentInfo(contentInfoEntity.getId()) != null;

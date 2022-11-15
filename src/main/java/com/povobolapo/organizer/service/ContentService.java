@@ -3,10 +3,8 @@ package com.povobolapo.organizer.service;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.model.ContentEntity;
 import com.povobolapo.organizer.model.ContentInfoEntity;
-import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.repository.ContentInfoRepository;
 import com.povobolapo.organizer.repository.ContentRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,26 +27,22 @@ public class ContentService {
     private final StorageService storageService;
     private final ContentRepository contentRepository;
     private final ContentInfoRepository contentInfoRepository;
-    private final UserService userService;
 
     @Autowired
     public ContentService(StorageService storageService,
                           ContentRepository contentRepository,
-                          ContentInfoRepository contentInfoRepository,
-                          UserService userService) {
+                          ContentInfoRepository contentInfoRepository) {
         this.storageService = storageService;
         this.contentRepository = contentRepository;
         this.contentInfoRepository = contentInfoRepository;
-        this.userService = userService;
     }
 
     @Transactional
     public ContentInfoEntity createContent(String fileName, String fileExtension, byte[] content) throws AuthenticationException, IOException {
-        ContentEntity contentEntity = creteOrGetContent(content);
+        ContentEntity contentEntity = creteOrGetContent(content, fileExtension);
 
-        UserEntity user = userService.getCurrentUser();
         ContentInfoEntity contentInfoEntity =
-                new ContentInfoEntity(fixFileName(fileName), fileExtension, contentEntity, user.getLogin());
+                new ContentInfoEntity(fileName, contentEntity, UserAuthoritiesService.getCurrentUserLogin());
         contentInfoRepository.save(contentInfoEntity);
 
         return contentInfoEntity;
@@ -71,7 +65,7 @@ public class ContentService {
             throw new NotFoundException("Can't found content info by id " + contentInfoId);
         }
         // Только автор созданного контетна может его удалить
-        if (!canManageContent(contentInfoEntity.get())) {
+        if (!UserAuthoritiesService.canDeleteUserData(contentInfoEntity.get().getOwner())) {
             throw new AccessDeniedException("Current user can't delete content " + contentInfoId);
         }
         // Сначала удаляем инфу из бд
@@ -90,10 +84,10 @@ public class ContentService {
     }
 
     public List<ContentInfoEntity> getUserContents() throws AuthenticationException {
-        return contentInfoRepository.findByOwner(userService.getCurrentUser().getLogin());
+        return contentInfoRepository.findByOwner(UserAuthoritiesService.getCurrentUserLogin());
     }
 
-    private ContentEntity creteOrGetContent(byte[] content) throws IOException {
+    private ContentEntity creteOrGetContent(byte[] content, String fileExtension) throws IOException {
         // Сначала вычисляется хэш по байтам и проверяется, что контент с таким же хэшем раньше не создавался
         int hashCode = Arrays.hashCode(content);
         ContentEntity contentEntity = contentRepository.findByHashCode(hashCode);
@@ -105,17 +99,12 @@ public class ContentService {
         contentEntity = new ContentEntity();
         contentEntity.setCreationDate(new Date());
         contentEntity.setHashCode(hashCode);
+        contentEntity.setFileExtension(fileExtension);
         contentRepository.save(contentEntity);
         // Непосредственное сохранение на диске сервера
         storageService.save(contentEntity.getId(), content);
 
         return contentEntity;
-    }
-
-    // TODO add role check
-    private boolean canManageContent(ContentInfoEntity contentInfoEntity) throws AuthenticationException {
-        UserEntity currentUser = userService.getCurrentUser();
-        return StringUtils.equals(currentUser.getLogin(), contentInfoEntity.getOwner());
     }
 
     // Чистим название файла от посторнних символов
