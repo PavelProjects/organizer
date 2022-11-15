@@ -1,10 +1,7 @@
 package com.povobolapo.organizer.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -18,6 +15,7 @@ import static com.povobolapo.organizer.model.DictTaskStatus.NAME;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class DictTaskStatus implements Serializable {
     public static final String NAME = "dict_task_status";
     @Id

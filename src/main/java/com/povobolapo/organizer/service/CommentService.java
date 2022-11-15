@@ -1,6 +1,6 @@
 package com.povobolapo.organizer.service;
 
-import com.povobolapo.organizer.controller.model.CommentDto;
+import com.povobolapo.organizer.controller.model.comment.CommentDto;
 import com.povobolapo.organizer.exception.NotFoundException;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.model.CommentEntity;

@@ -1,25 +1,29 @@
 package com.povobolapo.organizer.controller;
 
-import com.povobolapo.organizer.controller.model.TaskDto;
-import com.povobolapo.organizer.controller.model.TaskRequestBody;
-import com.povobolapo.organizer.controller.model.TaskSearchRequest;
+import com.povobolapo.organizer.controller.groups.OnCreate;
+import com.povobolapo.organizer.controller.groups.OnUpdate;
+import com.povobolapo.organizer.controller.model.task.TaskDto;
+import com.povobolapo.organizer.controller.model.task.TaskRequestBody;
+import com.povobolapo.organizer.controller.model.task.TaskSearchRequest;
 import com.povobolapo.organizer.mapper.TaskMapper;
 import com.povobolapo.organizer.service.TaskService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @RestController()
 @RequestMapping(value = "/task")
+@Validated
 public class TaskController {
-    private static final Logger log = LoggerFactory.getLogger(TaskController.class);
 
     private final TaskService taskService;
     private final TaskMapper taskMapper;
@@ -38,7 +42,7 @@ public class TaskController {
             request = new TaskSearchRequest();
         }
         return taskService.getAllTasks(request).stream()
-                .map(taskMapper::toDto).collect(Collectors.toList());
+                .map(taskMapper::toDtoShort).collect(Collectors.toList());
     }
 
     @GetMapping("/info")
@@ -49,18 +53,23 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public TaskDto createTask(@RequestBody TaskRequestBody task) throws AuthenticationException {
-        return taskMapper.toDto(taskService.createNewTask(taskMapper.toEntity(task)));
+    @ResponseStatus(HttpStatus.CREATED)
+    @Validated(OnCreate.class)
+    public TaskDto createTask(@RequestBody @Valid TaskRequestBody task) throws AuthenticationException {
+        log.debug("POST-request: createTask: {}", task);
+        return taskMapper.toDto(taskService.create(task));
     }
 
     @PutMapping("/update")
-    public TaskDto updateTask(@RequestBody TaskRequestBody task) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @Validated(OnUpdate.class)
+    public TaskDto updateTask(@RequestBody @Valid TaskRequestBody task) throws AuthenticationException {
         log.debug("GET-request: updateTask: (id={})", task.getId());
-        Objects.requireNonNull(task.getId(), "ID can't be NULL in update-method!");
-        return taskMapper.toDto(taskService.updateTask(task));
+        return taskMapper.toDto(taskService.update(task));
     }
 
     @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public boolean deleteTaskById(@RequestParam String id) {
         log.debug("DELETE-request: deleteTaskById (id={})", id);
         return taskService.deleteTaskById(id);
