@@ -1,5 +1,6 @@
 package com.povobolapo.organizer.service;
 
+import com.povobolapo.organizer.mapper.UserMapper;
 import com.povobolapo.organizer.model.*;
 import com.povobolapo.organizer.repository.NotificationRepository;
 import com.povobolapo.organizer.repository.NotifyTypeRepository;
@@ -35,13 +36,17 @@ public class NotificationService {
     private final NotifyTypeRepository notifyTypeRepository;
     private final EventDispatcher eventDispatcher;
 
+    private final UserMapper userMapper;
+
     @Autowired
     public NotificationService(NotificationRepository notificationRepository,
                                NotifyTypeRepository notifyTypeRepository,
-                               EventDispatcher eventDispatcher){
+                               EventDispatcher eventDispatcher,
+                               UserMapper userMapper){
         this.notificationRepository = notificationRepository;
         this.notifyTypeRepository = notifyTypeRepository;
         this.eventDispatcher = eventDispatcher;
+        this.userMapper = userMapper;
     }
 
     public List<NotificationEntity> getUserNotifications() throws AuthenticationException {
@@ -118,8 +123,8 @@ public class NotificationService {
     // Регистрация хендлеров в RuntimeConfig
     private void dispatchNotification(NotificationEntity notificationEntity) throws Exception {
         eventDispatcher.dispatch(new NotificationMessage(
-                notificationEntity.getUser(),
-                notificationEntity.getCreator(),
+                userMapper.toDto(notificationEntity.getUser()),
+                userMapper.toDto(notificationEntity.getCreator()),
                 notificationEntity.getType().getCaption(),
                 notificationEntity.getBody()));
     }

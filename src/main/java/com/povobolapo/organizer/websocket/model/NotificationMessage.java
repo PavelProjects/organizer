@@ -1,36 +1,36 @@
 package com.povobolapo.organizer.websocket.model;
 
-import com.povobolapo.organizer.model.UserEntity;
+import com.povobolapo.organizer.controller.model.user.UserDto;
 import com.povobolapo.organizer.utils.Event;
 
 public class NotificationMessage implements Event {
-    private UserEntity userTo;
+    private UserDto userTo;
     private String title;
     private String body;
-    private UserEntity userFrom;
+    private UserDto userFrom;
 
     public NotificationMessage() {
     }
 
 
-    public NotificationMessage(UserEntity userTo, String title, String body) {
+    public NotificationMessage(UserDto userTo, String title, String body) {
         this.userTo = userTo;
         this.title = title;
         this.body = body;
     }
 
-    public NotificationMessage(UserEntity userTo, UserEntity userFrom, String title, String body) {
+    public NotificationMessage(UserDto userTo, UserDto userFrom, String title, String body) {
         this.userTo = userTo;
         this.title = title;
         this.body = body;
         this.userFrom = userFrom;
     }
 
-    public UserEntity getUserTo() {
+    public UserDto getUserTo() {
         return userTo;
     }
 
-    public void setUserTo(UserEntity userTo) {
+    public void setUserTo(UserDto userTo) {
         this.userTo = userTo;
     }
 
@@ -50,11 +50,11 @@ public class NotificationMessage implements Event {
         this.body = body;
     }
 
-    public UserEntity getUserFrom() {
+    public UserDto getUserFrom() {
         return userFrom;
     }
 
-    public void setUserFrom(UserEntity userFrom) {
+    public void setUserFrom(UserDto userFrom) {
         this.userFrom = userFrom;
     }
 

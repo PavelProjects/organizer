@@ -1,6 +1,5 @@
 package com.povobolapo.organizer.websocket;
 
-import com.povobolapo.organizer.utils.EventHandler;
 import com.povobolapo.organizer.websocket.model.NotificationMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,6 +35,7 @@ public class WsSessionManager {
     public void addSession(String login, Session session) {
         setSessionProperties(session);
         activeSessions.putIfAbsent(login, session);
+        log.info("Added new session for user {}", login);
     }
 
     public void removeSession(String login) {
@@ -48,6 +48,7 @@ public class WsSessionManager {
         } catch (Exception ex) {
             log.error("Failed to close session", ex);
         }
+        log.info("User's {} session was removed", login);
     }
 
     public void sendObject(String login, Object obj) {
