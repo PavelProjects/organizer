@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = OrganizerApplication.class)
-class OrganizerApplicationTests {
+class OrganizerApplicationTestIT {
     private static final String TEST_USER_LOGIN = "autotest_user_2";
     private static final String AUTOTEST_LOGIN = "autotest_user";
     private static final String BASIC_USER_LOGIN = "basic_user";
@@ -72,7 +72,7 @@ class OrganizerApplicationTests {
     void testManageUser() throws AuthenticationException {
         // Создаем юзера
         UserEntity user = userService.createUser(new UserRequestBody(
-                TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik"));
+                TEST_USER_LOGIN, "1", "jopa@mail.ru", "bombastik", ""));
         assertTrue(StringUtils.isNotBlank(user.getId()));
 
         // Делаем вид, что удалить пытается другой юзер

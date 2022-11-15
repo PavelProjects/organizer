@@ -30,6 +30,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_HIBERNATE_SHOW_SQL: false
       JWT_SECRET: jwtsecret
+      STORAGE_BASE_PATH: /storage
+      STORAGE_MAX_FILE_SIZE: 1000000
   db:
     container_name: db
     image: postgres:13.3

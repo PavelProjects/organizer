@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.Set;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ContentInfoMapper.class})
 public interface UserMapper {
     UserDto toDto(UserEntity userEntity);
     UserEntity toEntity(UserDto userDto);

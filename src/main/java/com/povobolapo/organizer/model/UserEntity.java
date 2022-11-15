@@ -1,6 +1,9 @@
 package com.povobolapo.organizer.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,8 +14,7 @@ import java.util.Objects;
 @Table(name = "_user")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @ToString
 public class UserEntity implements Serializable {
     @Id
@@ -27,10 +29,11 @@ public class UserEntity implements Serializable {
     @Column(name = "name", length = 64, nullable = false)
     private String name;
 
-    @Column(name = "avatar", length = 128)
-    private String avatar;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar", referencedColumnName = "id")
+    private ContentInfoEntity avatar;
 
-    public UserEntity(String login, String name, String avatar) {
+    public UserEntity(String login, String name, ContentInfoEntity avatar) {
         this.login = login;
         this.name = name;
         this.avatar = avatar;

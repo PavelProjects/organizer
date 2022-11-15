@@ -3,6 +3,7 @@ package com.povobolapo.organizer.controller;
 import com.povobolapo.organizer.controller.model.error.ErrorResponse;
 import com.povobolapo.organizer.controller.model.error.Violation;
 import com.povobolapo.organizer.exception.NotFoundException;
+import com.povobolapo.organizer.exception.StorageException;
 import com.povobolapo.organizer.exception.ValidationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.naming.AuthenticationException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.io.IOException;
 import java.util.Locale;
 
 @Slf4j
@@ -30,29 +32,11 @@ public class ErrorHandler {
         Locale.setDefault(new Locale("en"));
     }
 
-    //TODO настроить отлов ошибок spring security
-    //https://www.baeldung.com/spring-security-exceptionhandler
-    //https://www.baeldung.com/spring-security-exceptions
-    //https://stackoverflow.com/questions/64015805/how-to-properly-handle-jwtexception
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Token expired");
-    }
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse badToken(MalformedJwtException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Bad token");
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponse wrongToken(JwtException exc) {
-        log.warn(exc.getMessage());
-        return new ErrorResponse("Wrong token");
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -106,5 +90,33 @@ public class ErrorHandler {
     public ErrorResponse authException(AuthenticationException exc) {
         log.warn(exc.getMessage());
         return new ErrorResponse("Current user not authenticated");
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse tokenExpired(ExpiredJwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Token expired");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse wrongToken(JwtException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse("Wrong token");
+    }
+
+    @ExceptionHandler(StorageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse storageException(StorageException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse(exc.getMessage());
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse ioException(IOException exc) {
+        log.warn(exc.getMessage());
+        return new ErrorResponse(exc.getMessage(), exc);
     }
 }
