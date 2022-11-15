@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class TaskSpecifications {
 
-    public static Specification<TaskEntity> hasLogin(String login) {
+    public static Specification<TaskEntity> hasAuthor(String login) {
         return (root, query, cb) -> cb.equal(root.get("author").get("login"), login);
     }
 

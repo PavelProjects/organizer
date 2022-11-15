@@ -73,7 +73,6 @@ public class TaskService {
         UserEntity authorUser = userService.getCurrentUser();
         TaskEntity task = taskMapper.toEntity(taskRequest);
         task.setAuthor(authorUser);
-        log.debug("Task in service: {}", task);
         DictTaskStatus status;
         if (task.getDictTaskStatus() == null) {
             status = taskStatusService.getTaskStatus("new");
@@ -87,6 +86,7 @@ public class TaskService {
                     .map(userService::getUserByLogin).collect(Collectors.toSet());
             task.setParticipants(party);
         }
+        log.debug("Task in service: {}", task);
         return taskRepository.save(task);
     }
 
@@ -95,11 +95,15 @@ public class TaskService {
     //TODO @vola юзай UserService.getCurrentUser() для получения авторизованного юзера
     // @poeblo спасибо!!!!!!!!!!!!
     @Transactional
-    public TaskEntity update(TaskRequestBody taskRequest) {
+    public TaskEntity update(TaskRequestBody taskRequest) throws AuthenticationException {
         Optional<TaskEntity> baseTask = taskRepository.findById(taskRequest.getId());
         if (baseTask.isEmpty()) {
             log.warn("Task is NULL, update stopped.");
             throw new NotFoundException("Task with id [" + taskRequest.getId() + "] not found.");
+        }
+        UserEntity authorUser = userService.getCurrentUser();
+        if (!baseTask.get().getAuthor().equals(authorUser)) {
+            throw new AuthenticationException("Нельзя редактировать чужую задачу.");
         }
         log.debug("Found task (id={}).", taskRequest.getId());
         TaskEntity newTask = updateTask(taskRequest, baseTask.get());
@@ -120,8 +124,8 @@ public class TaskService {
 
     private Specification<TaskEntity> createSpecForSearch(TaskSearchRequest request) {
         Specification<TaskEntity> spec = where(null);
-        if (request.getLogin() != null) {
-            spec = spec.and(TaskSpecifications.hasLogin(request.getLogin()));
+        if (request.getAuthor() != null) {
+            spec = spec.and(TaskSpecifications.hasAuthor(request.getAuthor()));
         }
         if (request.getStatus() != null) {
             spec = spec.and(TaskSpecifications.hasStatus(request.getStatus()));

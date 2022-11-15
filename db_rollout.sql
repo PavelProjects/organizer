@@ -99,7 +99,7 @@ insert into dict_notify_type (name, caption) values
      ('comment', 'Комментарий'),
      ('task', 'Задача');
 
-insert into dict_task_status (name, caption) values ('new', 'New'), ('doing', 'In progress'), ('done', 'Complete');
+insert into dict_task_status (name, caption) values ('new', 'New'), ('exec', 'In progress'), ('done', 'Complete');
 insert into _user_credits values (getnextid(),
                                   'autotest_user', '$2a$10$8vzgsIktNcMSE1/QU49jVeO1dVo2sJFFdHncZbN.QAFEhXovqSJA6',
                                   'jopa@mail.ru');

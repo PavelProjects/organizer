@@ -2,12 +2,10 @@ package com.povobolapo.organizer.model;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.util.Streamable;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class TaskEntity implements Serializable, Streamable<UserEntity> {
+public class TaskEntity implements Serializable {
     @Id
     @GenericGenerator(name = "entity_id", strategy = "com.povobolapo.organizer.model.EntityIdGenerator")
     @GeneratedValue(generator = "entity_id")
@@ -59,11 +57,6 @@ public class TaskEntity implements Serializable, Streamable<UserEntity> {
         this.dictTaskStatus = status;
         this.author = author;
         this.participants = participants;
-    }
-
-    @Override
-    public Iterator<UserEntity> iterator() {
-        return participants.iterator();
     }
 
     @Override
