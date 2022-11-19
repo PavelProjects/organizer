@@ -27,7 +27,7 @@ public class MappersTest {
     @Autowired
     private ContentInfoMapper contentInfoMapper;
 
-    private final UserEntity userEntity = new UserEntity("id", "name", "login", null);
+    private final UserEntity userEntity = new UserEntity("name", "login", null) {{setId("id");}};
     private final TaskEntity task = new TaskEntity(
             "id",
             "name",

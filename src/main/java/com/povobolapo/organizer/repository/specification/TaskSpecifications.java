@@ -1,10 +1,10 @@
-package com.povobolapo.organizer.utils;
+package com.povobolapo.organizer.repository.specification;
 
 import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.SetJoin;
 import java.util.Set;
 
 public class TaskSpecifications {
