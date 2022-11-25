@@ -64,9 +64,18 @@ create table _content_info (
 
 create table _user (
     id char(8) primary key default getnextid(),
+    creation_date timestamp with time zone not null default now(),
     login varchar(32) references _user_credits(login) not null unique,
     name varchar(64) not null,
     avatar varchar(8) references _content_info(id)
+);
+
+create table _user_relation (
+    id char(8) primary key default getnextid(),
+    creation_date timestamp with time zone not null default now(),
+    first_user_login varchar(32) references _user(login) not null,
+    second_user_login varchar(32) references _user(login) not null,
+    relation_type varchar(16)
 );
 
 create table _role(
@@ -130,7 +139,8 @@ create table _user_task (
 insert into dict_notify_type (name, caption) values
     ('system', 'Система'),
     ('comment', 'Комментарий'),
-    ('task', 'Задача');
+    ('task', 'Задача'),
+    ('user', 'Пользователь');
 insert into dict_task_status (name, caption) values ('new', 'New task'), ('execution', 'In progress'), ('completed', 'Done');
 
 insert into _privilege (name) values ('READ_ALL'), ('DELETE_ALL'), ('MODIFY_ALL');

@@ -2,6 +2,7 @@ package com.povobolapo.organizer.controller;
 
 import com.povobolapo.organizer.controller.model.user.UserDto;
 import com.povobolapo.organizer.controller.model.user.UserRequestBody;
+import com.povobolapo.organizer.controller.model.user.UserSearchRequest;
 import com.povobolapo.organizer.exception.ValidationException;
 import com.povobolapo.organizer.mapper.UserMapper;
 import com.povobolapo.organizer.service.UserService;
@@ -9,10 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -26,6 +30,16 @@ public class UserController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
+
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDto> findUsers(@RequestBody(required = false) UserSearchRequest userSearchRequest) {
+        if (userSearchRequest == null) {
+            userSearchRequest = new UserSearchRequest();
+        }
+        return userService.searchForUsers(userSearchRequest).stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
 
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)

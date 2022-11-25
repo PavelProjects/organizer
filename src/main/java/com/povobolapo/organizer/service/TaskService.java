@@ -8,7 +8,7 @@ import com.povobolapo.organizer.model.DictTaskStatus;
 import com.povobolapo.organizer.model.TaskEntity;
 import com.povobolapo.organizer.model.UserEntity;
 import com.povobolapo.organizer.repository.TaskRepository;
-import com.povobolapo.organizer.utils.TaskSpecifications;
+import com.povobolapo.organizer.repository.specification.TaskSpecifications;
 import com.povobolapo.organizer.utils.TemplateConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +62,6 @@ public class TaskService {
 
         Specification<TaskEntity> spec = createSpecForSearch(request);
         Page<TaskEntity> found = taskRepository.findAll(spec, pagesRequest);
-        log.debug("Found next values: " + found.getContent());
         return found.getContent();
     }
 

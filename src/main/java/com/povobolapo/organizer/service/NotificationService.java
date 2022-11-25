@@ -53,24 +53,6 @@ public class NotificationService {
         return notificationRepository.findByUserLogin(UserAuthoritiesService.getCurrentUserLogin());
     }
 
-    // Метод для создания системных уведмолений
-    // Например - обновите приложение, потеряна связь и т.п.
-    @Transactional
-    public void createSystemNotification(UserEntity userEntity, String body) {
-        checkNotificationCount(userEntity.getLogin());
-        log.debug("Creating new system notification for user {}", userEntity);
-        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.SYSTEM.getName());
-        notificationEntity.setBody(body);
-        notificationRepository.save(notificationEntity);
-        log.debug("System notification created");
-
-        try {
-            dispatchNotification(notificationEntity);
-        } catch (Exception ex) {
-            log.error("Failed to dispatch notification", ex);
-        }
-    }
-
     // Метод создания уведомлений для комментариев
 
     @Transactional
@@ -78,21 +60,8 @@ public class NotificationService {
         users.forEach(u -> createCommentNotification(u, comment));
     }
 
-    @Transactional
     public void createCommentNotification(UserEntity userEntity, CommentEntity comment) {
-        checkNotificationCount(userEntity.getLogin());
-        log.debug("Creating new comment notification for user {} for comment {}", userEntity, comment);
-        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.COMMENT.getName());
-        notificationEntity.setBody(comment.getBody());
-        notificationEntity.setCreator(comment.getAuthor());
-        notificationRepository.save(notificationEntity);
-        log.debug("Comment notification created");
-
-        try {
-            dispatchNotification(notificationEntity);
-        } catch (Exception ex) {
-            log.error("Failed to dispatch notification", ex);
-        }
+        createNotification(userEntity, comment.getAuthor(), comment.getBody(), NotifyTypes.COMMENT);
     }
 
     @Transactional
@@ -102,13 +71,19 @@ public class NotificationService {
 
     // Метод создания уведомлений для тасок
     // Например таска создана, таска обновлена
-    @Transactional
     public void createTaskNotification(UserEntity userEntity, TaskEntity task, @NotNull @NotEmpty String bodyTemplate) {
-        checkNotificationCount(userEntity.getLogin());
-        log.debug("Creating new task notification for user {} for task {}", userEntity, task);
-        NotificationEntity notificationEntity = createBasicNotification(userEntity, NotifyTypes.TASK.getName());
-        notificationEntity.setBody(bodyTemplate);
-        notificationEntity.setCreator(task.getAuthor());
+        createNotification(userEntity, task.getAuthor(), bodyTemplate, NotifyTypes.TASK);
+    }
+
+    @Transactional
+    public void createNotification(@NotNull UserEntity toUser, UserEntity creator, @NotNull String body, @NotNull NotifyTypes notifyType) {
+        checkNotificationCount(toUser.getLogin());
+        log.debug("Creating new notification for user {} type {}", toUser, notifyType.name());
+        NotificationEntity notificationEntity = createBasicNotification(toUser, NotifyTypes.TASK.getName());
+        notificationEntity.setBody(body);
+        if (creator != null) {
+            notificationEntity.setCreator(creator);
+        }
         notificationRepository.save(notificationEntity);
         log.debug("Task notification created");
 
@@ -189,10 +164,11 @@ public class NotificationService {
         return new NotificationEntity(userEntity, notifyType);
     }
 
-    enum NotifyTypes {
+    public enum NotifyTypes {
         SYSTEM("system"),
         COMMENT("comment"),
-        TASK("task");
+        TASK("task"),
+        USER("user");
 
         private final String name;
 

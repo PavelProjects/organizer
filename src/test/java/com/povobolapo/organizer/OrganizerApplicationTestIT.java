@@ -95,12 +95,11 @@ class OrganizerApplicationTestIT {
     }
 
     @Test
-    @Transactional
     void testNotifications() throws AuthenticationException {
         setSecurityContext(AUTOTEST_LOGIN);
 
         // Создаем тестовые уведомления
-        notificationService.createSystemNotification(userService.getUserByLogin(AUTOTEST_LOGIN), "unit_test_1");
+        notificationService.createNotification(userService.getUserByLogin(AUTOTEST_LOGIN), null, "unit_test_1", NotificationService.NotifyTypes.SYSTEM);
 
         // Получаем все уведомлени юзера и убеждаемся, что наши есть в результате
         List<NotificationEntity> notifications = notificationService.getUserNotifications();
